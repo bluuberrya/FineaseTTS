@@ -676,14 +676,8 @@ a:focus {
 .login_section {
   background-color: #ffffff;
   color: #00204a;
-  /* background-color: #00204a;
-  color: #ffffff; */
   justify-content: center;
   align-items: center;
-/* 
-  height: 70vh;
-  display: flex;
-   */
 }
 
 .login_section .heading_container {
@@ -694,9 +688,14 @@ a:focus {
 .login_form {
   max-width: 400px;
   width: 100%;
-  padding: 20px;
+  padding: 15px;
   justify-content: center;
   align-items: center;
+}
+
+.login_form label {
+  font-size: 14px;
+  font-weight: var(--font-bold);
 }
 
 .login_form input {
