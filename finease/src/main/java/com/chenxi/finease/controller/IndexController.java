@@ -11,10 +11,10 @@ import com.chenxi.finease.model.User;
 @Controller
 public class IndexController {
 
-	@GetMapping("/")
+	@GetMapping("/index")
 	public String index() {
 
-		return "welcome";
+		return "index";
 	}
 
 	// @PostMapping("/first")
@@ -29,6 +29,12 @@ public class IndexController {
 	// // model.addAttribute("lastname", user.getLname());
 	// return "reload";
 	// }
+
+	@GetMapping("/about")
+	public String about() {
+
+		return "about";
+	}
 
 	@GetMapping("/login")
 	public String login() {
