@@ -1,4 +1,12 @@
 @import url("https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Open+Sans:wght@300;400;600;700&display=swap");
+
+:root {
+  --main-bg-color: #00204a;
+  --main-text-color: #ffffff;
+  --text-size: 14px;
+  --font-bold: bold;
+}
+
 body {
   font-family: "Open Sans", sans-serif;
   color: #0c0c0c;
@@ -664,14 +672,34 @@ a:focus {
   background-color: #007fa4;
 }
 
-/* login section*/
+/* Login section */
 .login_section {
+  background-color: #ffffff;
+  color: #00204a;
   /* background-color: #00204a;
   color: #ffffff; */
-
+  justify-content: center;
+  align-items: center;
+/* 
+  height: 70vh;
+  display: flex;
+   */
 }
 
-.login_section input {
+.login_section .heading_container {
+  margin-bottom: 45px;
+}
+
+/* Login form */
+.login_form {
+  max-width: 400px;
+  width: 100%;
+  padding: 20px;
+  justify-content: center;
+  align-items: center;
+}
+
+.login_form input {
   display: block;
   width: 100%;
   margin-bottom: 10px;
@@ -680,37 +708,42 @@ a:focus {
   border-radius: 5px;
 }
 
-.login_section input:focus {
+.login_form input:focus {
   outline: none;
   border-color: #007fa4;
   box-shadow: 0 0 5px #007fa4;
 }
 
-.login_section button {
+/* Login button */
+.login_form button {
+  display: block;
+  width: 100%;
+  padding: 10px;
   background-color: #00bbf0;
   color: #ffffff;
-  padding: 10px 20px;
   border: none;
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s;
 }
 
-.login_section button:hover {
+.login_form button:hover {
   background-color: #007fa4;
 }
 
-.login_section p {
+/* Register link */
+.login_form p {
   margin-top: 20px;
   font-size: 14px;
+  text-align: center;
 }
 
-.login_section p a {
-  color: #007fa4;
+.login_form p a {
+  color: #00bbf0;
   text-decoration: none;
 }
 
-.login_section p a:hover {
+.login_form p a:hover {
   text-decoration: underline;
 }
 
