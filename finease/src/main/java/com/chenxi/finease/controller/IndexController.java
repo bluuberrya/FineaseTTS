@@ -48,16 +48,22 @@ public class IndexController {
 		return "register";
 	}
 
-	@GetMapping("/main")
-	public String main() {
+	@GetMapping("/dashboard")
+	public String dashboard() {
 
-		return "main";
+		return "dashboard";
 	}
 
-	@GetMapping("/reload")
-	public String reload() {
+	@GetMapping("/deposit")
+	public String deposit() {
 
-		return "reload";
+		return "deposit";
+	}
+
+	@GetMapping("/withdraw")
+	public String withdraw() {
+
+		return "withdraw";
 	}
 
 	@GetMapping("/transfer")
