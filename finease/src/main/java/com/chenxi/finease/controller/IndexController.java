@@ -77,4 +77,10 @@ public class IndexController {
 
 		return "history";
 	}
+	
+	@GetMapping("/profile")
+	public String profile() {
+
+		return "profile";
+	}
 }

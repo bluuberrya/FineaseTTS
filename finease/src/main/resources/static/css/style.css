@@ -952,6 +952,52 @@ a:focus {
   border-color: #0056b3;
 }
 
+/* transfer section*/
+.transfer_section {
+  padding: 50px 0;
+}
+
+.transfer_section .card {
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.transfer_section .card-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.transfer_section form .form-group {
+  margin-bottom: 20px;
+}
+
+.transfer_section form label {
+  font-weight: bold;
+}
+
+.transfer_section form input[type="text"],
+.transfer_section form input[type="number"] {
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.transfer_section form button {
+  padding: 10px 20px;
+  border-radius: 5px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.transfer_section form button:hover {
+  background-color: #0056b3;
+}
+
 
 
 /* footer section*/
