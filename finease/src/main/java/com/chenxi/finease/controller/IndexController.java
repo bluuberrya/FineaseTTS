@@ -14,7 +14,7 @@ public class IndexController {
 	@GetMapping("/index")
 	public String index() {
 
-		return "index";
+		return "main/index";
 	}
 
 	// @PostMapping("/first")
@@ -33,19 +33,40 @@ public class IndexController {
 	@GetMapping("/about")
 	public String about() {
 
-		return "about";
+		return "main/about";
 	}
+
+	@GetMapping("/service")
+	public String service() {
+
+		return "main/service";
+	}
+
+	@GetMapping("/why")
+	public String why() {
+
+		return "main/why";
+	}
+
+	@GetMapping("/team")
+	public String team() {
+
+		return "main/team";
+	}
+
+
+	//dash
 
 	@GetMapping("/login")
 	public String login() {
 
-		return "login";
+		return "main/login";
 	}
 
 	@GetMapping("/register")
 	public String register() {
 
-		return "register";
+		return "main/register";
 	}
 
 	@GetMapping("/dashboard")
