@@ -72,36 +72,36 @@ public class IndexController {
 	@GetMapping("/dashboard")
 	public String dashboard() {
 
-		return "dashboard";
+		return "user/dashboard";
 	}
 
 	@GetMapping("/deposit")
 	public String deposit() {
 
-		return "deposit";
+		return "user/deposit";
 	}
 
 	@GetMapping("/withdraw")
 	public String withdraw() {
 
-		return "withdraw";
+		return "user/withdraw";
 	}
 
 	@GetMapping("/transfer")
 	public String transfer() {
 
-		return "transfer";
+		return "user/transfer";
 	}
 
 	@GetMapping("/history")
 	public String history() {
 
-		return "history";
+		return "user/history";
 	}
 	
 	@GetMapping("/profile")
 	public String profile() {
 
-		return "profile";
+		return "user/profile";
 	}
 }

@@ -1,292 +1,131 @@
-<!-- <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Register - Dummy Banking</title>
-  <link rel="stylesheet" href="/css/main.css">
-</head>
-<body>
-  <div class="container">
-    <header>
-      <h1>Dummy Banking</h1>
-    </header>
-    <main>
-      <h2>Register Account</h2>
-      <form action="register_process.php" method="POST">
-        <div class="form-group">
-          <label for="fullname">Full Name:</label>
-          <input type="text" id="fullname" name="fullname" required>
-        </div>
-        <div class="form-group">
-          <label for="email">Email:</label>
-          <input type="email" id="email" name="email" required>
-        </div>
-        <div class="form-group">
-          <label for="username">Username:</label>
-          <input type="text" id="username" name="username" required>
-        </div>
-        <div class="form-group">
-          <label for="password">Password:</label>
-          <input type="password" id="password" name="password" required>
-        </div>
-        <button type="submit" class="button">Register</button>
-      </form>
-      <p>Already have an account? <a href="login.html">Login here</a>.</p>
-    </main>
-  </div>
-</body>
-</html> -->
-
-
-
-<!-- <!DOCTYPE html>
-<html xmlns:th="https://www.thymeleaf.org" lang="en">
-	<head>
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0"
-			charset="ISO-8859-1">
-		<title>Finease</title>
-		<link rel="stylesheet" href="/css/styles.css">
-	</head>
-	<body>
-		<div class="container">
-			<h1>Finease</h1>
-			<form>
-				<input type="user id" placeholder="User ID">
-				<input type="password" placeholder="Password">
-				<button type="submit">Log in</button>
-				<p>Don't have an account? <a href="register">Sign up</a></p>
-			</form>
-		</div>
-	</body>
-</html> -->
-
-
 <!DOCTYPE html>
 <html>
 
-<head>
-  <!-- Basic -->
-  <meta charset="utf-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <!-- Mobile Metas -->
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-  <!-- Site Metas -->
-  <meta name="keywords" content="" />
-  <meta name="description" content="" />
-  <meta name="author" content="" />
-  <link rel="shortcut icon" href="images/favicon.png" type="">
+  <head>
+    <!-- Basic -->
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <!-- Mobile Metas -->
+    <meta name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <!-- Site Metas -->
+    <meta name="keywords" content />
+    <meta name="description" content />
+    <meta name="author" content />
+    <link rel="shortcut icon" href="images/favicon.png" type>
 
-  <title> Finease </title>
+    <title> Finease </title>
 
-  <!-- bootstrap core css -->
-  <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+    <!-- bootstrap core css -->
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
 
-  <!-- fonts style -->
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <!-- fonts style -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap"
+      rel="stylesheet">
 
-  <!--owl slider stylesheet -->
-  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
+    <!--owl slider stylesheet -->
+    <link rel="stylesheet" type="text/css"
+      href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
 
-  <!-- font awesome style -->
-  <link href="css/font-awesome.min.css" rel="stylesheet" />
+    <!-- font awesome style -->
+    <link href="css/font-awesome.min.css" rel="stylesheet" />
 
-  <!-- Custom styles for this template -->
-  <link href="css/style.css" rel="stylesheet" />
-  <!-- responsive style -->
-  <link href="css/responsive.css" rel="stylesheet" />
+    <!-- Custom styles for this template -->
+    <link href="css/style.css" rel="stylesheet" />
+    <!-- responsive style -->
+    <link href="css/responsive.css" rel="stylesheet" />
 
-</head>
+  </head>
 
-<body class="sub_page">
+  <body class="sub_page">
 
-  <div class="hero_area">
+    <div class="hero_area">
 
-    <div class="hero_bg_box">
+      <!-- <div class="hero_bg_box">
       <div class="bg_img_box">
         <img src="images/hero-bg.png" alt="">
       </div>
-    </div>
+    </div> -->
 
-    <!-- header section strats -->
-    <header class="header_section">
-      <div class="container-fluid">
-        <nav class="navbar navbar-expand-lg custom_nav-container ">
-          <a class="navbar-brand" href="index">
-            <span>
-              Finease
-            </span>
-          </a>
-
-          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class=""> </span>
-          </button>
-
-          <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav  ">
-              <li class="nav-item ">
-                <a class="nav-link" href="index">Home </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="about"> About </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="login"> <i class="fa fa-user" aria-hidden="true"></i> Login</a>
-              </li>
-              <form class="form-inline">
-                <button class="btn  my-2 my-sm-0 nav_search-btn" type="submit">
-                  <i class="fa fa-search" aria-hidden="true"></i>
-                </button>
-              </form>
-            </ul>
-          </div>
-        </nav>
-      </div>
-    </header>
-    <!-- end header section -->
-  </div>
-
-  <!-- register section -->
-  <section class="login_section layout_padding">
-    <div class="container">
-      <div class="heading_container heading_center">
-        <h2>
-          Register
-        </h2>
-        <div class="login_form">
-          <form>
-            <label for="fullname">Full Name</label>
-            <input type="text" id="fullname" name="'fullname" required>
-            <label for="email">Email Address</label>
-            <input type="email" id="email" name="'email" required>
-            <label for="fullname">Username</label>
-            <input type="username" id="username" name="'username" required>
-            <label for="fullname">Password</label>
-            <input type="password" id="password" name="'password" required>
-            <button type="submit">Register</button>
-          </form>
-          <p>Already have an account? <a href="login">Login here</a></p>
-        </div>
-      </div>
-
-    </section>
-    <!-- end register section -->
-  
-    <!-- info section -->
-    <section class="info_section layout_padding2">
-      <div class="container">
-        <div class="row">
-          <div class="col-md-6 col-lg-3 info_col">
-            <div class="info_contact">
-              <h4>
-                Address
-              </h4>
-              <div class="contact_link_box">
-                <a href="">
-                  <i class="fa fa-map-marker" aria-hidden="true"></i>
-                  <span>
-                    Location
-                  </span>
-                </a>
-                <a href="">
-                  <i class="fa fa-phone" aria-hidden="true"></i>
-                  <span>
-                    Call +01 1234567890
-                  </span>
-                </a>
-                <a href="">
-                  <i class="fa fa-envelope" aria-hidden="true"></i>
-                  <span>
-                    demo@gmail.com
-                  </span>
-                </a>
-              </div>
-            </div>
-            <div class="info_social">
-              <a href="">
-                <i class="fa fa-facebook" aria-hidden="true"></i>
-              </a>
-              <a href="">
-                <i class="fa fa-twitter" aria-hidden="true"></i>
-              </a>
-              <a href="">
-                <i class="fa fa-linkedin" aria-hidden="true"></i>
-              </a>
-              <a href="">
-                <i class="fa fa-instagram" aria-hidden="true"></i>
-              </a>
+      <body>
+        <div class="container-xxl position-relative bg-white d-flex p-0">
+          <!-- Spinner Start -->
+          <div id="spinner"
+            class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+            <div class="spinner-border text-primary"
+              style="width: 3rem; height: 3rem;" role="status">
+              <span class="sr-only">Loading...</span>
             </div>
           </div>
-          <div class="col-md-6 col-lg-3 info_col">
-            <div class="info_detail">
-              <h4>
-                Info
-              </h4>
-              <p>
-                necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with a handful
-              </p>
-            </div>
-          </div>
-          <div class="col-md-6 col-lg-2 mx-auto info_col">
-            <div class="info_link_box">
-              <h4>
-                Links
-              </h4>
-              <div class="info_links">
-                <a class="active" href="index">
-                  Home
-                </a>
-                <a class="" href="about">
-                  About
-                </a>
+          <!-- Spinner End -->
+
+          <!-- Register Start -->
+          <div class="container-fluid">
+            <div class="row h-100 align-items-center justify-content-center"
+              style="min-height: 100vh;">
+              <div class="col-12 col-sm-8 col-md-6 col-lg-5 col-xl-4">
+                <div class="bg-light rounded p-4 p-sm-5 my-4 mx-3">
+                  <div
+                    class="d-flex align-items-center justify-content-between mb-3">
+                    <a href="index" class>
+                      <h3 class="header_section"><b>Finease</b></h3>
+                    </a>
+                    <h3><b>Register</b></h3>
+                  </div>
+                  <div class="form-floating mb-3">
+                    <label for="floatingText">Name</label>
+                    <input type="text" class="form-control" id="floatingText"
+                      placeholder="jhondoe" required>
+                  </div>
+                  <div class="form-floating mb-3">
+                    <label for="floatingInput">Email address</label>
+                    <input type="email" class="form-control" id="floatingInput"
+                      placeholder="name@example.com" required>
+                  </div>
+                  <div class="form-floating mb-4">
+                    <label for="floatingPassword">Password</label>
+                    <input type="password" class="form-control"
+                      id="floatingPassword" placeholder="Password" required>
+                  </div>
+                  <div class="form-floating mb-4">
+                    <label for="floatingPassword">Confirm password</label>
+                    <input type="password" class="form-control"
+                      id="floatingPassword" placeholder="Password" required>
+                  </div>
+                  <button class="btn btn-primary py-3 w-100 mb-4">
+                    <a href="login" style="color: white; text-decoration: none;">Register</a>
+                  </button>
+                  <p class="text-center mb-0">Already have an Account? <a
+                      href="login">Sign In</a></p>
+                </div>
               </div>
             </div>
           </div>
-          <div class="col-md-6 col-lg-3 info_col ">
-            <h4>
-              Subscribe
-            </h4>
-            <form action="#">
-              <input type="text" placeholder="Enter email" />
-              <button type="submit">
-                Subscribe
-              </button>
-            </form>
-          </div>
-        </div>
-      </div>
-    </section>
-  
-    <!-- end info section -->
-    
-    <!-- footer section -->
-    <section class="footer_section">
-      <div class="container">
-        <p>
-          &copy; <span id="displayYear"></span> All Rights Reserved By Finease
-        </p>
-      </div>
-    </section>
-    <!-- footer section -->
-  
-    <!-- jQery -->
-    <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
-    <!-- popper js -->
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
-    </script>
-    <!-- bootstrap js -->
-    <script type="text/javascript" src="js/bootstrap.js"></script>
-    <!-- owl slider -->
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js">
-    </script>
-    <!-- custom js -->
-    <script type="text/javascript" src="js/custom.js"></script>
-    <!-- Google Map -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCh39n5U-4IoWpsVGUHWdqB6puEkhRLdmI&callback=myMap">
-    </script>
-    <!-- End Google Map -->
-  
-  </body>
-  
-  </html>
+          <!-- Register End -->
+
+          <!-- jQery -->
+          <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
+          <!-- popper js -->
+          <script
+            src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+            crossorigin="anonymous">
+  </script>
+          <!-- bootstrap js -->
+          <script type="text/javascript" src="js/bootstrap.js"></script>
+          <!-- owl slider -->
+          <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js">
+  </script>
+          <!-- custom js -->
+          <script type="text/javascript" src="js/custom.js"></script>
+          <!-- Google Map -->
+          <script
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCh39n5U-4IoWpsVGUHWdqB6puEkhRLdmI&callback=myMap">
+  </script>
+          <!-- End Google Map -->
+
+        </body>
+
+      </html>
