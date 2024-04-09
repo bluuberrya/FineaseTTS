@@ -30,6 +30,12 @@ public class IndexController {
 	// return "reload";
 	// }
 
+	@GetMapping("/test")
+	public String test() {
+
+		return "main/test";
+	}
+
 	@GetMapping("/about")
 	public String about() {
 
@@ -104,4 +110,6 @@ public class IndexController {
 
 		return "user/profile";
 	}
+
+	
 }

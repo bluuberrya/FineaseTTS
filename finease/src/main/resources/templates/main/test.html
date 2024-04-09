@@ -1,0 +1,158 @@
+<!-- add break when mouse hover to other stuff -->
+
+<!DOCTYPE html>
+<html lang="en">
+    <link href="css/style.css" rel="stylesheet" />
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Screen Reader</title>
+</head>
+
+<body>
+    <section class="about_section layout_padding">
+        <div class="container  ">
+          <div class="heading_container heading_center">
+            <h2>
+              About <span>Us</span>
+            </h2>
+            <p>
+              Magni quod blanditiis non minus sed aut voluptatum illum quisquam aspernatur ullam vel beatae rerum ipsum
+              voluptatibus
+            </p>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="detail-box">
+                <h3>
+                  We Are Finease
+                </h3>
+                <p>
+                  There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration
+                  in some form, by injected humour,
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+    <!-- Add HTML elements -->
+    <h1 id="heading1">Hello</h1>
+    <h2 id="heading2">Hell nah</h2>
+    <p id="paragraph1">This is a paragraph.</p>
+    <input type="text" id="textField" value="This is a text field.">
+    <textarea id="textarea" rows="4" cols="50">This is a text area.</textarea>
+    <button id="button1">Click me</button>
+
+    <select id="voiceList"></select>
+    <button id="speechBtn">Start Reading</button>
+
+    <script src="static/js/tts.js"></script>
+
+
+
+
+    <script>
+        const voiceList = document.getElementById("voiceList"),
+            speechBtn = document.getElementById("speechBtn");
+
+        let synth = window.speechSynthesis,
+            isSpeaking = false;
+
+        voices();
+
+        function voices() {
+            for (let voice of synth.getVoices()) {
+                let selected = voice.name === "Google US English" ? "selected" : "";
+                let option = `<option value="${voice.name}" ${selected}>${voice.name} (${voice.lang})</option>`;
+                voiceList.insertAdjacentHTML("beforeend", option);
+            }
+        }
+
+        synth.addEventListener("voiceschanged", voices);
+
+        function textToSpeech(text) {
+            let utterance = new SpeechSynthesisUtterance(text);
+            for (let voice of synth.getVoices()) {
+                if (voice.name === voiceList.value) {
+                    utterance.voice = voice;
+                    break;
+                }
+            }
+            synth.speak(utterance);
+        }
+
+        function addHoverListenersToElements() {
+            let elements = document.querySelectorAll('h1, h2, h3, p, input, textarea, button');
+            elements.forEach(element => {
+                element.addEventListener("mouseenter", () => {
+                    let text = element.textContent;
+                    if (!synth.speaking) {
+                        textToSpeech(text);
+                        isSpeaking = true;
+                    }
+                });
+            });
+        }
+
+        function addClickListenersToElements() {
+            document.getElementById("textField").addEventListener("click", () => {
+                if (!synth.speaking) {
+                    textToSpeech("click text field");
+                    isSpeaking = true;
+                }
+            });
+
+            document.getElementById("textarea").addEventListener("click", () => {
+                if (!synth.speaking) {
+                    textToSpeech("click text area");
+                    isSpeaking = true;
+                }
+            });
+
+            document.getElementById("button1").addEventListener("click", () => {
+                if (!synth.speaking) {
+                    textToSpeech("click button");
+                    isSpeaking = true;
+                }
+            });
+        }
+
+        addHoverListenersToElements();
+        addClickListenersToElements();
+
+        document.getElementById("textField").addEventListener("input", (event) => {
+            let text = event.target.value;
+            if (!synth.speaking && text.trim() !== "") {
+                textToSpeech(text);
+                isSpeaking = true;
+            }
+        });
+
+        document.getElementById("textarea").addEventListener("input", (event) => {
+            let text = event.target.value;
+            if (!synth.speaking && text.trim() !== "") {
+                textToSpeech(text);
+                isSpeaking = true;
+            }
+        });
+
+        speechBtn.addEventListener("click", () => {
+            if (!isSpeaking) {
+                let hoveredText = window.getSelection().toString().trim();
+                if (hoveredText !== "") {
+                    textToSpeech(hoveredText);
+                    isSpeaking = true;
+                }
+            } else {
+                synth.cancel();
+                isSpeaking = false;
+            }
+        });
+    </script>
+</body>
+
+</html>
