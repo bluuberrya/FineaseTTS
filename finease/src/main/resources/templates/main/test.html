@@ -45,7 +45,7 @@
     <p id="paragraph1">This is a paragraph.</p>
     <input type="text" id="textField" value="This is a text field.">
     <textarea id="textarea" rows="4" cols="50">This is a text area.</textarea>
-    <button id="button1">Click me</button>
+    <button id="button">Click me</button>
 
     <select id="voiceList"></select>
     <button id="speechBtn">Start Reading</button>
@@ -113,7 +113,7 @@
                 }
             });
 
-            document.getElementById("button1").addEventListener("click", () => {
+            document.getElementById("button").addEventListener("click", () => {
                 if (!synth.speaking) {
                     textToSpeech("click button");
                     isSpeaking = true;
