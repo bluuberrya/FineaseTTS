@@ -1,20 +1,19 @@
 <!DOCTYPE html>
 <html>
 
-  <head>
-    <!-- Basic -->
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <!-- Mobile Metas -->
-    <meta name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <!-- Site Metas -->
-    <meta name="keywords" content />
-    <meta name="description" content />
-    <meta name="author" content />
-    <link rel="shortcut icon" href="images/favicon.png" type>
+<head>
+  <!-- Basic -->
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <!-- Mobile Metas -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <!-- Site Metas -->
+  <meta name="keywords" content />
+  <meta name="description" content />
+  <meta name="author" content />
+  <link rel="shortcut icon" href="images/favicon.png" type>
 
-    <title> Finease </title>
+  <title> Login </title>
 
   <!-- bootstrap core css -->
   <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
@@ -23,7 +22,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
 
   <!--owl slider stylesheet -->
-  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
+  <link rel="stylesheet" type="text/css"
+    href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
 
   <!-- font awesome style -->
   <link href="css/font-awesome.min.css" rel="stylesheet" />
@@ -33,95 +33,74 @@
   <!-- responsive style -->
   <link href="css/responsive.css" rel="stylesheet" />
 
-  </head>
+</head>
 
-  <body class="sub_page">
+<body class="sub_page">
 
-    <div class="hero_area">
+  <div class="hero_area">
 
-      <!-- <div class="hero_bg_box">
-      <div class="bg_img_box">
-        <img src="images/hero-bg.png" alt="">
-      </div>
-    </div> -->
+    <body>
+      <div class="container-xxl position-relative bg-white d-flex p-0">
 
-      <body>
-        <div class="container-xxl position-relative bg-white d-flex p-0">
-
-          <!-- Spinner Start -->
-          <div id="spinner"
-            class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
-            <div class="spinner-border text-primary"
-              style="width: 3rem; height: 3rem;" role="status">
-              <span class="sr-only">Loading...</span>
-            </div>
+        <!-- Spinner Start -->
+        <div id="spinner"
+          class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+          <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+            <span class="sr-only">Loading...</span>
           </div>
-          <!-- Spinner End -->
-          
-
-          <!-- Sign In Start -->
-          <div class="container-fluid">
-            <div class="row h-100 align-items-center justify-content-center"
-              style="min-height: 100vh;">
-              <div class="col-12 col-sm-8 col-md-6 col-lg-5 col-xl-4">
-                <div class="bg-light rounded p-4 p-sm-5 my-4 mx-3">
-                  <div
-                    class="d-flex align-items-center justify-content-between mb-3">
-                    <a href="index" class>
-                      <h3 class="header_section"><b>Finease</b></h3>
-                    </a>
-                    <h3><b>Login</b></h3>
-                  </div>
-                  
-                  <div class="form-floating mb-3">
-                    <label for="floatingInput">Email address</label>
-                    <input type="email" class="form-control" id="floatingInput"
-                      placeholder="name@example.com" required>
-                  </div>
-                  <div class="form-floating mb-4">
-                    <label for="floatingPassword">Password</label>
-                    <input type="password" class="form-control"
-                      id="floatingPassword" placeholder="Password" required>
-                  </div>
-                  <button type="submit"
-                    class="btn btn-primary py-3 w-100 mb-4">
-                    <a href="dashboard" style="color: white; text-decoration: none;">Login</a>
-                  </button>
-                  <p class="text-center mb-0">Don't have an Account? <a
-                      href="register">Register</a></p>
+        </div>
+        <!-- Spinner End -->
 
 
-                      <p class="text-center mb-0">Temp <a
-                        href="dashboard">Dashboard</a></p>
+        <!-- Sign In Start -->
+        <div class="container-fluid">
+          <div class="row h-100 align-items-center justify-content-center" style="min-height: 100vh;">
+            <div class="col-12 col-sm-8 col-md-6 col-lg-5 col-xl-4">
+              <div class="bg-light rounded p-4 p-sm-5 my-4 mx-3">
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                  <a href="index" class>
+                    <h3 class="header_section"><b>Finease</b></h3>
+                  </a>
+                  <h3><b>Login</b></h3>
                 </div>
+
+                <div class="form-floating mb-3">
+                  <label for="uemail">Email address</label>
+                  <input type="email" class="form-control" id="uemail" name="Email address" placeholder="name@example.com" required>
+                </div>
+                <div class="form-floating mb-4">
+                  <label for="upassword">Password</label>
+                  <input type="password" class="form-control" id="upassword" name="Password" placeholder="Password" required>
+                </div>
+                
+                <button type="submit" class="btn btn-primary py-3 w-100 mb-4">
+                  <a href="dashboard" style="color: white; text-decoration: none;">Login</a>
+                </button>
+                <p class="text-center mb-0">Don't have an Account? <a href="register">Register</a></p>
+
+
+                <p class="text-center mb-0">Temp <a href="dashboard">Dashboard</a></p>
               </div>
             </div>
           </div>
-          <!-- Sign In End -->
         </div>
+        <!-- Sign In End -->
+      </div>
 
-        <!-- jQery -->
-        <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
-        <!-- popper js -->
-        <script
-          src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-          integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
-          crossorigin="anonymous">
-  </script>
-        <!-- bootstrap js -->
-        <script type="text/javascript" src="js/bootstrap.js"></script>
-        <!-- owl slider -->
-        <script type="text/javascript"
-          src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js">
-  </script>
-        <!-- custom js -->
-        <script type="text/javascript" src="js/custom.js"></script>
-        <!-- Google Map -->
-        <script
-          src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCh39n5U-4IoWpsVGUHWdqB6puEkhRLdmI&callback=myMap">
-  </script>
-        <!-- End Google Map -->
+      <div id="screenReader">
+        <select id="voiceList"></select>
+        <button id="screenReaderBtn">Activate</button>
+        <button id="speechBtn"><span class="sr-only">Pause</span> <i class="fa fa-pause" aria-hidden="true"></i> </button> 
+        <button id="clearStateBtn"><span class="sr-only">Reset Setting</span> <i class="fa fa-refresh" aria-hidden="true"></i> </button>
+      </div>
+  
+      <script src="/js/tts.js"></script>
 
-      </body>
+      <!-- owl slider -->
+      <script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
 
-    </html>
+        
+    </body>
+
+</html>

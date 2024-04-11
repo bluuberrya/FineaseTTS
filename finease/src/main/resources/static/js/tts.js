@@ -29,6 +29,7 @@ function toggleScreenReader() {
         screenReaderBtn.textContent = "Deactivate";
         speechBtn.style.display = "inline"; // Show the speech button
         localStorage.setItem("screenReaderState", "active"); // Save state in local storage
+        speakPageName();
     } else {
         removeHoverListenersFromElements();
         removeClickListenersFromElements();
@@ -47,6 +48,13 @@ function textToSpeech(text) {
         }
     }
     synth.speak(utterance);
+}
+
+// Function to speak the current page name
+function speakPageName() {
+    let currentPage = document.title; // Get the title of the current page
+    playaudio("/audio/pop.mp3");
+    textToSpeech(`You are now at ${currentPage} page`);
 }
 
 // Function to handle mouseover event on screen reader button
@@ -69,6 +77,31 @@ function addClickListenersToElements() {
     });
 }
 
+function clickEventListener() {
+    let itemText = this.textContent;
+    let elementType = this.tagName.toLowerCase();
+    let clickText = "";
+
+    // Determine the appropriate click text based on the element type
+    if (elementType === "a") {
+        clickText = `click ${itemText}`;
+    } else if (elementType === "textarea") {
+        clickText = `click ${itemText} text area`;
+    } else if (elementType === "input") {
+        clickText = `click ${itemText} ${this.name} input field`;
+    } else if (elementType === "button") {
+        clickText = `click ${itemText} button`;
+    } else {
+        clickText = `click ${itemText}`;
+    }
+
+    // Speak the click event if it's not empty
+    if (clickText !== "" && !synth.speaking) {
+        textToSpeech(clickText);
+        isSpeaking = true;
+    }
+}
+
 function removeHoverListenersFromElements() {
     let elements = document.querySelectorAll('h1, h2, h3, h4, h5, p, a, input, textarea, button, img[alt]');
     elements.forEach(element => {
@@ -84,24 +117,32 @@ function removeClickListenersFromElements() {
 }
 
 function hoverEventListener() {
-    let text = this.textContent;
-    if (this.tagName.toLowerCase() === "img") {
-        text = this.alt;
-    }
-    if (!synth.speaking) {
-        textToSpeech(text);
-        isSpeaking = true;
-    }
-}
-
-
-function clickEventListener() {
     let itemText = this.textContent;
-    if (!synth.speaking) {
-        textToSpeech(`click ${itemText}`);
+    let elementType = this.tagName.toLowerCase();
+    let hoverText = "";
+
+    // Determine the appropriate hover text based on the element type
+    if (elementType === "img") {
+        hoverText = this.alt;
+    } else if (elementType === "textarea") {
+        hoverText = `${itemText} text area`;
+    } else if (elementType === "input") {
+        hoverText = `${itemText} ${this.name} input field`;
+    } else if (elementType === "button") {
+        hoverText = `${itemText} button`;
+    } else {
+        hoverText = `${itemText}`;
+    }
+
+    // Set the text to be spoken if it's not empty
+    if (hoverText !== "" && !synth.speaking) {
+        textToSpeech(hoverText);
         isSpeaking = true;
     }
 }
+
+
+
 
 speechBtn.addEventListener("click", () => {
     if (!isSpeaking) {
@@ -173,5 +214,5 @@ document.getElementById("clearStateBtn").addEventListener("click", function() {
     }
     localStorage.removeItem("screenReaderState");
     playaudio("/audio/munch.mp3");
-    textToSpeech("Cookie Cleared");
+    textToSpeech("Setting Resetted");
 });
