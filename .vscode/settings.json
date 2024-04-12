@@ -1,3 +1,7 @@
 {
-    "java.compile.nullAnalysis.mode": "automatic"
+    "java.compile.nullAnalysis.mode": "automatic",
+    "discord.detailsIdling": "prolly somewhere eating",
+    "discord.largeImageIdling": "prolly somewhere eating",
+    "discord.lowerDetailsIdling": "prolly somewhere eating",
+    "java.configuration.updateBuildConfiguration": "interactive"
 }

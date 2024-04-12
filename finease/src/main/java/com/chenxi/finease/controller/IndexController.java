@@ -60,9 +60,6 @@ public class IndexController {
 		return "main/team";
 	}
 
-
-	//dash
-
 	@GetMapping("/login")
 	public String login() {
 
@@ -74,6 +71,8 @@ public class IndexController {
 
 		return "main/register";
 	}
+
+//user
 
 	@GetMapping("/dashboard")
 	public String dashboard() {
@@ -111,5 +110,24 @@ public class IndexController {
 		return "user/profile";
 	}
 
-	
+//admin
+
+	@GetMapping("/manageuser")
+	public String manageuser() {
+
+		return "admin/manageuser";
+	}
+
+	@GetMapping("/activitylog")
+	public String activitylog() {
+
+		return "admin/activitylog";
+	}
+
+	@GetMapping("/systemreport")
+	public String systemreport() {
+
+		return "admin/systemreport";
+	}
+
 }

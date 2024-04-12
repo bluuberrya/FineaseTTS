@@ -158,9 +158,10 @@ speechBtn.addEventListener("click", () => {
     }
 });
 
-//JavaScript function to play the beep sound  
+//JavaScript function to play sound  
 function playaudio(audioPath) {   
-    var sound = new Audio(audioPath);   
+    var sound = new Audio(audioPath);
+    // sound.volume = 0.5;
     sound.play();   
 }
 
