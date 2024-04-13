@@ -130,4 +130,21 @@ public class IndexController {
 		return "admin/systemreport";
 	}
 
+	@GetMapping("/mainheader")
+	public String mainheader() {
+
+		return "common/mainheader";
+	}
+
+	@GetMapping("/userheader")
+	public String userheader() {
+
+		return "common/userheader";
+	}
+
+	@GetMapping("/adminheader")
+	public String adminheader() {
+
+		return "common/adminheader";
+	}
 }
