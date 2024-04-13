@@ -130,6 +130,8 @@ public class IndexController {
 		return "admin/systemreport";
 	}
 
+
+	//common
 	@GetMapping("/mainheader")
 	public String mainheader() {
 
@@ -146,5 +148,11 @@ public class IndexController {
 	public String adminheader() {
 
 		return "common/adminheader";
+	}
+
+	@GetMapping("/accesswidget")
+	public String accesswidget() {
+
+		return "common/accesswidget";
 	}
 }

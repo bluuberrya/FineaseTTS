@@ -51,14 +51,58 @@
     </div>
 
     <!-- History section -->
-    <h1>
-        History
-    </h1>
+    <div class="container">
+        <h1 class="mt-5 mb-4">User Banking History</h1>
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">Transaction ID</th>
+              <th scope="col">Type</th>
+              <th scope="col">Amount</th>
+              <th scope="col">Date</th>
+              <th scope="col">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">1</th>
+              <td>Deposit</td>
+              <td>$1000</td>
+              <td>2024-04-14</td>
+              <td><button class="btn btn-primary view-pdf-btn">View PDF</button></td>
+            </tr>
+            <tr>
+              <th scope="row">2</th>
+              <td>Withdraw</td>
+              <td>$500</td>
+              <td>2024-04-15</td>
+              <td><button class="btn btn-primary view-pdf-btn">View PDF</button></td>
+            </tr>
+            <tr>
+              <th scope="row">3</th>
+              <td>Transfer</td>
+              <td>$200</td>
+              <td>2024-04-16</td>
+              <td><button class="btn btn-primary view-pdf-btn">View PDF</button></td>
+            </tr>
+            <!-- Add more rows for additional transactions -->
+          </tbody>
+        </table>
+      </div>
+    
+      <!-- PDF Section -->
+      <div id="pdf-section" class="container">
+        <h2>PDF Document</h2>
+        <!-- Include your PDF viewer here -->
+        <!-- For example, you can use <embed> or <iframe> to display the PDF -->
+        <embed src="/pdf/example.pdf" width="100%" height="1000px">
+      </div>
+    
     
     <!-- History section -->
 
-    <script src="/js/tts.js"></script>
-    <script src="/js/common.js"></script>
+    <div id="accessibility-widget"></div>
+    <script src="/js/script.js"></script>
 
 
 </body>

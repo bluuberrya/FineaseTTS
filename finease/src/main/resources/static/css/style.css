@@ -1027,7 +1027,7 @@ a:focus {
 /* Widget */
 /* screen reader */
 
-#screenReader {
+.screenReader {
   position: fixed;
   bottom: 10px; /* Adjust the distance from the bottom */
   left: 10px; /* Adjust the distance from the left */
@@ -1037,13 +1037,13 @@ a:focus {
   z-index: 9999;
 }
 
-#screenReader button {
+.screenReader button {
   background-color: transparent;
   color: white;
   border: none;
   cursor: pointer;
 }
 
-#screenReader button:hover {
+.screenReader button:hover {
   text-decoration: underline;
 }
