@@ -1,7 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
     var headerType;
     var headerContainerId;
-    var widgetContainerId = 'accessibility-widget';
 
     // Determine header type based on the existence of element with id "main-header-container", "user-header-container", or "admin-header-container"
     if (document.getElementById("main-header-container")) {
@@ -14,7 +13,7 @@ document.addEventListener("DOMContentLoaded", function () {
         headerType = 'admin';
         headerContainerId = 'admin-header-container';
     } else {
-        console.error("Header container not found.");
+        console.log("Header container not found.");
         return; // Stop execution if header container is not found
     }
 
@@ -23,21 +22,21 @@ document.addEventListener("DOMContentLoaded", function () {
         .then(response => response.text())
         .then(html => {
             document.getElementById(headerContainerId).innerHTML = html;
-            fetchAndAppendAccessibilityWidget(widgetContainerId);
             highlightCurrentPage();
         });
 });
 
-// Function to fetch and append the accessibility widget
-function fetchAndAppendAccessibilityWidget(widgetContainerId) {
+document.addEventListener("DOMContentLoaded", function () {
+    // get fetch accessibility widget
     fetch('accesswidget')
         .then(response => response.text())
         .then(widgetHtml => {
             // Append the accessibility widget HTML to the specified container
-            document.getElementById(widgetContainerId).innerHTML = widgetHtml;
+            document.getElementById('accessibility-widget').innerHTML = widgetHtml;
             initializeTTS();
         });
-}
+});
+
 
 function highlightCurrentPage() {
     // Get the current URL
@@ -69,7 +68,17 @@ function initializeTTS() {
     let synth = window.speechSynthesis,
         isSpeaking = false,
         isScreenReaderActive = false;
-    fKeyDownTime = null;
+
+    checkScreenReaderState();
+    // Function to check the screen reader state and activate it if necessary
+    function checkScreenReaderState() {
+        if (localStorage.getItem("screenReaderState") === "active") {
+            toggleScreenReader(); // Activate screen reader if it was active
+        } else {
+            speechBtn.style.display = "none"; // Hide the speech button
+        }
+    }
+
 
     // Listen for the 'voiceschanged' event before calling the 'voices()' function
     synth.addEventListener("voiceschanged", voices);
@@ -92,6 +101,7 @@ function initializeTTS() {
             addClickListenersToElements();
             screenReaderBtn.textContent = "Deactivate";
             speechBtn.style.display = "inline"; // Show the speech button
+            voiceList.style.display = "inline";
             localStorage.setItem("screenReaderState", "active"); // Save state in local storage
             speakPageName();
         } else {
@@ -99,6 +109,7 @@ function initializeTTS() {
             removeClickListenersFromElements();
             screenReaderBtn.textContent = "Activate";
             speechBtn.style.display = "none"; // Hide the speech button
+            voiceList.style.display = "none";
             localStorage.removeItem("screenReaderState"); // Remove state from local storage
         }
     }
@@ -191,7 +202,11 @@ function initializeTTS() {
         } else if (elementType === "textarea") {
             hoverText = `${itemText} text area`;
         } else if (elementType === "input") {
-            hoverText = `${itemText} ${this.name} input field`;
+            if (this.readOnly) {
+                hoverText = `${this.name}, ${this.value}`;
+            } else {
+                hoverText = `${itemText} ${this.name} input field`;
+            }
         } else if (elementType === "button") {
             hoverText = `${itemText} button`;
         } else {
@@ -204,8 +219,6 @@ function initializeTTS() {
             isSpeaking = true;
         }
     }
-
-
 
 
     speechBtn.addEventListener("click", () => {
@@ -229,7 +242,6 @@ function initializeTTS() {
         sound.play();
     }
 
-
     // State
     // Call toggleScreenReader when the screenReaderBtn is clicked
     screenReaderBtn.addEventListener("click", () => {
@@ -244,34 +256,22 @@ function initializeTTS() {
         toggleScreenReader();
     });
 
-    // Event listener to handle pressing of the F key
-    document.addEventListener("keydown", (event) => {
-        if (event.code === "KeyF") {
-            fKeyDownTime = Date.now(); // Record the current timestamp
-        }
-    });
+    // // Event listener to handle pressing of the F key
+    // document.addEventListener("keydown", (event) => {
+    //     if (event.code === "KeyF") {
+    //         fKeyDownTime = Date.now(); // Record the current timestamp
+    //     }
+    // });
 
-    // Event listener to handle release of the F key after a long press
-    document.addEventListener("keyup", (event) => {
-        if (event.code === "KeyF" && fKeyDownTime !== null && Date.now() - fKeyDownTime >= 1000) {
-            toggleScreenReader(); // Toggle the screen reader
-            fKeyDownTime = null; // Reset the timestamp
-        }
-    });
+    // // Event listener to handle release of the F key after a long press
+    // document.addEventListener("keyup", (event) => {
+    //     if (event.code === "KeyF" && fKeyDownTime !== null && Date.now() - fKeyDownTime >= 1000) {
+    //         toggleScreenReader(); // Toggle the screen reader
+    //         fKeyDownTime = null; // Reset the timestamp
+    //     }
+    // });
 
 
-
-    // Function to check the screen reader state and activate it if necessary
-    function checkScreenReaderState() {
-        if (localStorage.getItem("screenReaderState") === "active") {
-            toggleScreenReader(); // Deactivate screen reader if it was active
-        } else {
-            speechBtn.style.display = "none"; // Hide the speech button
-        }
-    }
-
-    // Call the function to check the screen reader state when the page loads
-    window.addEventListener("load", checkScreenReaderState);
 
     document.getElementById("clearStateBtn").addEventListener("click", function () {
         if (localStorage.getItem("screenReaderState") === "active") {

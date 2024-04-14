@@ -13,7 +13,7 @@
     <meta name="author" content />
     <link rel="shortcut icon" href="images/favicon.png" type>
 
-    <title> Finease </title>
+    <title> Profile </title>
 
     <!-- bootstrap core css -->
     <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
@@ -50,12 +50,44 @@
         <!-- end header section -->
     </div>
 
-    <!-- Profile section -->
-    <h1>
-        Profile
-    </h1>
-    
-    <!-- Profile section -->
+    <!-- Profile Start -->
+    <div class="container">
+        <h1 class="mt-5 mb-4 text-center">Profile</h1>
+        <div class="row justify-content-center">
+            <div class="col-md-8 mx-auto">
+                <div class="card">
+                    <div class="card-body">
+                        <form>
+                            <div class="mb-3">
+                                <label for="pname" class="form-label">Name</label>
+                                <input type="text" class="form-control" id="pname" name="Name"
+                                    value="Vincent Willem van Gogh" readonly>
+                            </div>
+                            <div class="mb-3">
+                                <label for="pemail" class="form-label">Email address</label>
+                                <input type="email" class="form-control" id="pemail" name="Email address"
+                                    value="vangogh@example.com" readonly>
+                            </div>
+                            <div class="mb-3">
+                                <label for="pdob" class="form-label">Date of Birth</label>
+                                <input type="text" class="form-control" id="pdob" name="Date of Birth"
+                                    value="20 September 2000" readonly>
+                            </div>
+                            <div class="mb-3">
+                                <label for="pgender" class="form-label">Gender</label>
+                                <input type="text" class="form-control" id="pgender" name="Gender"
+                                    value="Male" readonly>
+                            </div>
+                            <div class="text-center">
+                                <button type="button" class="btn btn-primary w-45" id="editProfileBtn">Edit</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Profile End -->
 
     <div id="accessibility-widget"></div>
     <script src="/js/script.js"></script>
