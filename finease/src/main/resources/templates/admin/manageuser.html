@@ -50,33 +50,82 @@
         <!-- end header section -->
     </div>
 
-    <!-- Dashboard section -->
-    <section class="dashboard_section layout_padding">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-8 mx-auto">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">Account Overview</h5>
-                            <div class="account-details">
-                                <p>Current Balance: RM 1000</p>
-                                <p>Savings Balance: RM 500</p>
+    <!-- Manage User section -->
+    <section id="manage-user" class="container">
+        <h1 class="mt-5 mb-4 text-center">Manage User</h1>
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>User ID</th>
+                        <th>Name</th>
+                        <th>Email Address</th>
+                        <th>Age</th>
+                        <th>Gender</th>
+                        <th>Current Balance</th>
+                        <th>Savings Balance</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Table rows will be dynamically populated with user information -->
+                    <tr>
+                        <td><input type="checkbox" class="user-checkbox"></td>
+                        <td>1</td>
+                        <td>John Doe</td>
+                        <td>johndoe@example.com</td>
+                        <td>30</td>
+                        <td>Male</td>
+                        <td>$1000</td>
+                        <td>$500</td>
+                    </tr>
+                    <!-- Add more rows for additional users -->
+                </tbody>
+            </table>
+        </div>
+        <div class="action-buttons text-center">
+            <button class="btn btn-primary" id="edit-btn">Edit</button>
+            <button class="btn btn-success" id="add-btn">Add</button>
+            <button class="btn btn-danger" id="delete-btn">Delete</button>
+        </div>
+    </section>
+    <!-- End Manage User section -->
+
+    <!-- Selected User Details section -->
+    <section id="selected-user" class="container">
+        <h2 class="mt-5 mb-4 text-center">User Details</h2>
+        <div class="row justify-content-center">
+            <div class="col-md-8 mx-auto">
+                <div class="card">
+                    <div class="card-body">
+                        <form>
+                            <div class="mb-3">
+                                <label for="pname" class="form-label">Name</label>
+                                <input type="text" class="form-control" id="pname" name="Name">
                             </div>
-                            <div class="action-buttons">
-                                <a class="btn btn-primary" href="deposit"><span>Deposit</span></a>
-                                <a class="btn btn-primary" href="withdraw"><span>Withdraw</span></a>
-                                <a class="btn btn-primary" href="transfer"><span>Transfer</span></a>
+                            <div class="mb-3">
+                                <label for="pemail" class="form-label">Email address</label>
+                                <input type="email" class="form-control" id="pemail" name="Email address">
                             </div>
-                        </div>
+                            <div class="mb-3">
+                                <label for="pdob" class="form-label">Date of Birth</label>
+                                <input type="text" class="form-control" id="pdob" name="Date of Birth">
+                            </div>
+                            <div class="mb-3">
+                                <label for="pgender" class="form-label">Gender</label>
+                                <input type="text" class="form-control" id="pgender" name="Gender" readonly>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
     </section>
-    <!-- End Dashboard section -->
-    
+    <!-- End Selected User Details section -->
+
     <div id="accessibility-widget"></div>
     <script src="/js/script.js"></script>
+    
 </body>
 
 </html>
