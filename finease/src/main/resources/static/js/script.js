@@ -70,27 +70,96 @@ function initializeTTS() {
         isScreenReaderActive = false;
 
     checkScreenReaderState();
+
+    // Listen for the 'voiceschanged' event before calling the 'voices()' function
+    synth.addEventListener("voiceschanged", voices);
+
+    // Set the selected voice from localStorage or default to Google US English
+    voiceList.value = localStorage.getItem("selectedVoice") || "Google US English";
+
+    // Update the selected voice in localStorage when the user changes it
+    voiceList.addEventListener("change", function () {
+        localStorage.setItem("selectedVoice", this.value);
+        textToSpeech(`Selected ${this.value}`);
+    });
+
+    // Function to handle mouseover event on screen reader button
+    screenReaderBtn.addEventListener("mouseover", () => {
+        let hoverText = isScreenReaderActive ? "Click to Deactivate Screen Reader" : "Click to Activate Screen Reader";
+        textToSpeech(hoverText);
+    });
+
+    speechBtn.addEventListener("click", () => {
+        playaudio("/audio/toggle_on.mp3");
+        pause();
+
+    });
+
+    // State
+    // Call toggleScreenReader when the screenReaderBtn is clicked
+    screenReaderBtn.addEventListener("click", () => {
+        if (!isScreenReaderActive && !isSpeaking) {
+            playaudio("/audio/toggle_on.mp3");
+            setTimeout(function() {
+                textToSpeech("Screen Reader Activated");
+            }, 300);
+        }
+        if (isScreenReaderActive && isSpeaking) {
+            playaudio("/audio/toggle_off.mp3");
+            setTimeout(function() {
+                textToSpeech("Screen Reader Deactivated");
+            }, 300);
+        }
+        toggleScreenReader();
+    });
+
+    // // Event listener to handle pressing of the F key
+    // document.addEventListener("keydown", (event) => {
+    //     if (event.code === "KeyF") {
+    //         fKeyDownTime = Date.now(); // Record the current timestamp
+    //     }
+    // });
+
+    // // Event listener to handle release of the F key after a long press
+    // document.addEventListener("keyup", (event) => {
+    //     if (event.code === "KeyF" && fKeyDownTime !== null && Date.now() - fKeyDownTime >= 1000) {
+    //         toggleScreenReader(); // Toggle the screen reader
+    //         fKeyDownTime = null; // Reset the timestamp
+    //     }
+    // });
+
+    document.getElementById("clearStateBtn").addEventListener("click", function () {
+        if (localStorage.getItem("screenReaderState") === "active") {
+            toggleScreenReader(); // Deactivate screen reader if it was active
+        }
+        localStorage.removeItem("screenReaderState");
+        localStorage.setItem("selectedVoice", "Google US English");
+        playaudio("/audio/munch.mp3");
+        textToSpeech("Settings Reset");
+    });
+
+
+    function voices() {
+        // Check if synth.getVoices() is not null before iterating over it
+        if (synth.getVoices() !== null) {
+            // Clear the options in the voiceList dropdown
+            voiceList.innerHTML = "";
+            for (let voice of synth.getVoices()) {
+                //let selected = voice.name === "Google US English" ? "selected" : "";
+                let selected = voice.name === localStorage.getItem("selectedVoice") ? "selected" : "";
+                let option = `<option value="${voice.name}" ${selected}>${voice.name} (${voice.lang})</option>`;
+                voiceList.insertAdjacentHTML("beforeend", option);
+            }
+            addHoverListenersToElements();
+        }
+    }
+
     // Function to check the screen reader state and activate it if necessary
     function checkScreenReaderState() {
         if (localStorage.getItem("screenReaderState") === "active") {
             toggleScreenReader(); // Activate screen reader if it was active
         } else {
             speechBtn.style.display = "none"; // Hide the speech button
-        }
-    }
-
-
-    // Listen for the 'voiceschanged' event before calling the 'voices()' function
-    synth.addEventListener("voiceschanged", voices);
-
-    function voices() {
-        // Check if synth.getVoices() is not null before iterating over it
-        if (synth.getVoices() !== null) {
-            for (let voice of synth.getVoices()) {
-                let selected = voice.name === "Google US English" ? "selected" : "";
-                let option = `<option value="${voice.name}" ${selected}>${voice.name} (${voice.lang})</option>`;
-                voiceList.insertAdjacentHTML("beforeend", option);
-            }
         }
     }
 
@@ -127,21 +196,23 @@ function initializeTTS() {
 
     // Function to speak the current page name
     function speakPageName() {
-        let currentPage = document.title; // Get the title of the current page
+        let pageText = "";
         playaudio("/audio/pop.mp3");
-        textToSpeech(`You are now at ${currentPage} page`);
+        setTimeout(function() {
+            pageText = `You are now at ${document.title} page`;
+    
+            if (pageText !== "" && !synth.speaking) {
+                textToSpeech(pageText);
+                isSpeaking = true;
+            }
+        }, 800);
     }
 
-    // Function to handle mouseover event on screen reader button
-    screenReaderBtn.addEventListener("mouseover", () => {
-        let hoverText = isScreenReaderActive ? "Click to Deactivate Screen Reader" : "Click to Activate Screen Reader";
-        textToSpeech(hoverText);
-    });
-
     function addHoverListenersToElements() {
-        let elements = document.querySelectorAll('h1, h2, h3, h4, h5, p, a, input, textarea, button, img[alt]');
+        let elements = document.querySelectorAll('h1, h2, h3, h4, h5, p, a, input, textarea, button, img[alt], select');
         elements.forEach(element => {
             element.addEventListener("mouseenter", hoverEventListener);
+            element.addEventListener("mouseleave", pause);
         });
     }
 
@@ -149,6 +220,21 @@ function initializeTTS() {
         let elements = document.querySelectorAll('a, input, textarea, button');
         elements.forEach(element => {
             element.addEventListener("click", clickEventListener);
+        });
+    }
+
+    function removeHoverListenersFromElements() {
+        let elements = document.querySelectorAll('h1, h2, h3, h4, h5, p, a, input, textarea, button, img[alt]');
+        elements.forEach(element => {
+            element.removeEventListener("mouseenter", hoverEventListener);
+            element.removeEventListener("mouseleave", pause);
+        });
+    }
+
+    function removeClickListenersFromElements() {
+        let elements = document.querySelectorAll('a, input, textarea, button');
+        elements.forEach(element => {
+            element.removeEventListener("click", clickEventListener);
         });
     }
 
@@ -169,26 +255,12 @@ function initializeTTS() {
         } else {
             clickText = `click ${itemText}`;
         }
-
+        pause();
         // Speak the click event if it's not empty
         if (clickText !== "" && !synth.speaking) {
             textToSpeech(clickText);
             isSpeaking = true;
         }
-    }
-
-    function removeHoverListenersFromElements() {
-        let elements = document.querySelectorAll('h1, h2, h3, h4, h5, p, a, input, textarea, button, img[alt]');
-        elements.forEach(element => {
-            element.removeEventListener("mouseenter", hoverEventListener);
-        });
-    }
-
-    function removeClickListenersFromElements() {
-        let elements = document.querySelectorAll('a, input, textarea, button');
-        elements.forEach(element => {
-            element.removeEventListener("click", clickEventListener);
-        });
     }
 
     function hoverEventListener() {
@@ -209,6 +281,9 @@ function initializeTTS() {
             }
         } else if (elementType === "button") {
             hoverText = `${itemText} button`;
+        } else if (elementType === "select") {
+            hoverText = `${this.name}, currently selected${this.value}`;
+
         } else {
             hoverText = `${itemText}`;
         }
@@ -219,9 +294,8 @@ function initializeTTS() {
             isSpeaking = true;
         }
     }
-
-
-    speechBtn.addEventListener("click", () => {
+    
+    function pause() {
         if (!isSpeaking) {
             let hoveredText = window.getSelection().toString().trim();
             if (hoveredText !== "") {
@@ -231,54 +305,12 @@ function initializeTTS() {
         } else {
             synth.cancel();
             isSpeaking = false;
-            playaudio("/audio/toggle_on.mp3");
         }
-    });
-
-    //JavaScript function to play sound  
-    function playaudio(audioPath) {
-        var sound = new Audio(audioPath);
-        // sound.volume = 0.5;
-        sound.play();
     }
 
-    // State
-    // Call toggleScreenReader when the screenReaderBtn is clicked
-    screenReaderBtn.addEventListener("click", () => {
-        if (!isScreenReaderActive && !isSpeaking) {
-            textToSpeech("Screen Reader Activated");
-            playaudio("/audio/toggle_on.mp3");
-        }
-        if (isScreenReaderActive && isSpeaking) {
-            textToSpeech("Screen Reader Deactivated");
-            playaudio("/audio/toggle_off.mp3");
-        }
-        toggleScreenReader();
-    });
-
-    // // Event listener to handle pressing of the F key
-    // document.addEventListener("keydown", (event) => {
-    //     if (event.code === "KeyF") {
-    //         fKeyDownTime = Date.now(); // Record the current timestamp
-    //     }
-    // });
-
-    // // Event listener to handle release of the F key after a long press
-    // document.addEventListener("keyup", (event) => {
-    //     if (event.code === "KeyF" && fKeyDownTime !== null && Date.now() - fKeyDownTime >= 1000) {
-    //         toggleScreenReader(); // Toggle the screen reader
-    //         fKeyDownTime = null; // Reset the timestamp
-    //     }
-    // });
-
-
-
-    document.getElementById("clearStateBtn").addEventListener("click", function () {
-        if (localStorage.getItem("screenReaderState") === "active") {
-            toggleScreenReader(); // Deactivate screen reader if it was active
-        }
-        localStorage.removeItem("screenReaderState");
-        playaudio("/audio/munch.mp3");
-        textToSpeech("Setting Resetted");
-    });
+    function playaudio(audioPath) {
+        var sound = new Audio(audioPath);
+        sound.volume = 0.5;
+        sound.play();
+    }
 }
