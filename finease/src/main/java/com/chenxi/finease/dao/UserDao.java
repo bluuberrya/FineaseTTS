@@ -1,18 +1,18 @@
-package com.chenxi.finease.dao;
+// package com.chenxi.finease.dao;
 
-import java.util.List;
+// import java.util.List;
 
-import org.springframework.data.repository.CrudRepository;
+// import org.springframework.data.repository.CrudRepository;
 
-import com.chenxi.finease.model.User;
+// import com.chenxi.finease.model.User;
 
-public interface UserDao extends CrudRepository<User, Long> {
+// public interface UserDao extends CrudRepository<User, Long> {
 
-    User findByUsername(String username);
+//     User findByUsername(String username);
 
-    User findByEmail(String email);
+//     User findByEmail(String email);
 
-    @SuppressWarnings("null")
-    List<User> findAll();
+//     @SuppressWarnings("null")
+//     List<User> findAll();
     
-}
+// }

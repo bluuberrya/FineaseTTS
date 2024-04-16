@@ -1,11 +1,11 @@
-package com.chenxi.finease.dao;
+// package com.chenxi.finease.dao;
 
-import org.springframework.data.repository.CrudRepository;
+// import org.springframework.data.repository.CrudRepository;
 
-import com.chenxi.finease.security.Role;
+// import com.chenxi.finease.security.Role;
 
-public interface RoleDao extends CrudRepository<Role, Integer> {
+// public interface RoleDao extends CrudRepository<Role, Integer> {
 
-    Role findByName(String name);
+//     Role findByName(String name);
     
-}
+// }
