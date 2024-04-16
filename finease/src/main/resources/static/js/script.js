@@ -132,8 +132,8 @@ function initializeTTS() {
         if (localStorage.getItem("screenReaderState") === "active") {
             toggleScreenReader(); // Deactivate screen reader if it was active
         }
-        localStorage.removeItem("screenReaderState");
         localStorage.setItem("selectedVoice", "Google US English");
+        localStorage.removeItem("screenReaderState");
         playaudio("/audio/munch.mp3");
         textToSpeech("Settings Reset");
     });
@@ -150,7 +150,6 @@ function initializeTTS() {
                 let option = `<option value="${voice.name}" ${selected}>${voice.name} (${voice.lang})</option>`;
                 voiceList.insertAdjacentHTML("beforeend", option);
             }
-            addHoverListenersToElements();
         }
     }
 
@@ -224,7 +223,7 @@ function initializeTTS() {
     }
 
     function removeHoverListenersFromElements() {
-        let elements = document.querySelectorAll('h1, h2, h3, h4, h5, p, a, input, textarea, button, img[alt]');
+        let elements = document.querySelectorAll('h1, h2, h3, h4, h5, p, a, input, textarea, button, img[alt], select');
         elements.forEach(element => {
             element.removeEventListener("mouseenter", hoverEventListener);
             element.removeEventListener("mouseleave", pause);
