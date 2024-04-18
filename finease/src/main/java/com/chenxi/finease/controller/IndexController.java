@@ -3,7 +3,7 @@ package com.chenxi.finease.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
-// import com.chenxi.finease.model.User;
+import com.chenxi.finease.model.User;
 
 @Controller
 public class IndexController {

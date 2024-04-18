@@ -37,7 +37,7 @@ public class User implements UserDetails {
     private String password;
     private String firstName;
     private String lastName;
-    private String myID;
+    private String aadhaarId;
 
     @Column(name = "email", nullable = false, unique = true)
     private String email;
@@ -158,7 +158,7 @@ public class User implements UserDetails {
                 ", phone='" + phone + '\'' +
                 ", recipientList=" + recipientList +
                 ", userRoles=" + userRoles +
-                ", myID='" + myID + '\'' +
+                ", aadhaarId='" + aadhaarId + '\'' +
                 '}';
     }
 
@@ -193,12 +193,12 @@ public class User implements UserDetails {
         this.enabled = enabled;
     }
 
-	public String getMyId() {
-		return myID;
+	public String getAadhaarId() {
+		return aadhaarId;
 	}
 
-	public void setMyID(String myID) {
-		this.myID = myID;
+	public void setAadhaarId(String aadhaarId) {
+		this.aadhaarId = aadhaarId;
 	}
 
 }
