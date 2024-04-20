@@ -16,7 +16,7 @@ public class User {
     private String firstName;
     private String lastName;
     private String email;
-    private String phone;
+    private String phoneNumber;
 
     @SuppressWarnings("unused")
 	private boolean enabled = true;
@@ -70,12 +70,12 @@ public class User {
         this.email = email;
     }
 
-    public String getPhone() {
-        return phone;
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
     public List<Recipient> getRecipientList() {
@@ -119,7 +119,7 @@ public class User {
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +
-                ", phone='" + phone + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
                 ", recipientList=" + recipientList +
                 '}';
     }

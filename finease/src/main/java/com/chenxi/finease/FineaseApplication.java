@@ -3,13 +3,11 @@ package com.chenxi.finease;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-@SpringBootApplication
-@ComponentScan(basePackages = {"com.chenxi.finease"})
+@SpringBootApplication(scanBasePackages = "com.chenxi.finease")
 @EntityScan({"com.chenxi.finease.model"})
-@EnableJpaRepositories("com.chenxi.finease.dao")
+@EnableJpaRepositories("com.chenxi.finease.repository")
 
 public class FineaseApplication {
 

@@ -1,21 +1,46 @@
 package com.chenxi.finease.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.chenxi.finease.model.User;
+import com.chenxi.finease.service.UserService;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class IndexController {
 
-	@GetMapping("/index")
-	public String index() {
+    @Autowired
+    private UserService userService;
+	
+	// @GetMapping("/index")
+	// public String index() {
 
-		return "main/index";
-	}
+	// 	return "main/index";
+	// }
+
+    @RequestMapping("/")
+    public String home() {
+    	
+        return "redirect:/index";
+        
+    }
+
+    @RequestMapping("/index")
+    public String index() {
+    	
+        return "main/index";
+        
+    }
+
 
 	// @PostMapping("/first")
 	// public String userRegistration(@ModelAttribute User user, Model model) {
@@ -60,17 +85,44 @@ public class IndexController {
 		return "main/team";
 	}
 
-	@GetMapping("/login")
-	public String login() {
+//login and register
 
-		return "main/login";
-	}
+    @GetMapping("/login")
+    public String showLoginForm() {
+        return "user/login";
+    }
 
-	@GetMapping("/register")
-	public String register() {
+    @PostMapping("/login")
+    public String login(HttpServletRequest request, HttpSession session) {
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
 
-		return "main/register";
-	}
+        if (userService.validateUser(username, password)) {
+            session.setAttribute("username", username);
+
+            if (username.equals("admin")) {
+                return "redirect:/manageuser";
+            } else {
+                return "redirect:/dashboard";
+            }
+        } else {
+            return "redirect:/login?error=InvalidCredentials";
+        }
+    }
+
+    @GetMapping("/register")
+    public String showRegistrationForm(Model model) {
+        User user = new User();
+        model.addAttribute("user", user);
+        return "user/register";
+    }
+
+    @PostMapping("/register")
+    public String registerUser(@ModelAttribute User user) {
+		System.out.println(user);
+        userService.createUser(user);
+        return "redirect:/login"; // Redirect to login page after registration
+    }
 
 //user
 
@@ -104,11 +156,54 @@ public class IndexController {
 		return "user/history";
 	}
 	
-	@GetMapping("/profile")
-	public String profile() {
+	// @GetMapping("/profile")
+	// public String profile() {
 
+	// 	return "user/profile";
+	// }
+
+	// @GetMapping("/profile")
+	// public String showProfile(HttpSession session, Model model) {
+	// 	// Retrieve the username from the session
+	// 	String username = (String) session.getAttribute("username");
+
+	// 	// Pass the username to the profile page
+	// 	model.addAttribute("username", username);
+
+	// 	// Return the view name for the profile page
+	// 	return "user/profile";
+	// }
+
+	@GetMapping("/profile")
+	public String showProfile(HttpSession session, Model model) {
+		// Retrieve the username from the session
+	    String username = (String) session.getAttribute("username");
+
+		// Check if the username is not null
+		if (username != null) {
+			// Retrieve the user object from the database using the username
+			User user = userService.findByUsername(username);
+
+			// Pass the user object attributes to the profile page
+			model.addAttribute("firstName", user.getFirstName());
+			model.addAttribute("lastName", user.getLastName());
+			model.addAttribute("username", user.getUsername());
+			model.addAttribute("email", user.getEmail());
+			model.addAttribute("phoneNumber", user.getPhoneNumber());
+			model.addAttribute("password", user.getPassword());
+		} else {
+			// If the username is null, redirect to the login page
+			return "redirect:/login";
+		}
+		// Return the view name for the profile page
 		return "user/profile";
 	}
+
+    @PostMapping("/profile/update")
+    public String updateProfile(@RequestBody User user) {
+        userService.updateUser(user);
+        return "redirect:/profile";
+    }
 
 //admin
 
@@ -131,7 +226,7 @@ public class IndexController {
 	}
 
 
-	//common
+//common
 	@GetMapping("/mainheader")
 	public String mainheader() {
 

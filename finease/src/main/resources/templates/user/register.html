@@ -11,7 +11,7 @@
   <meta name="keywords" content />
   <meta name="description" content />
   <meta name="author" content />
-  <link rel="shortcut icon" href="images/favicon.png" type>
+  <link rel="shortcut icon" href="images/favicon.png">
 
   <title> Register </title>
 
@@ -59,34 +59,47 @@
         <!-- Register Start -->
         <div class="container-fluid">
           <div class="row h-100 align-items-center justify-content-center" style="min-height: 100vh;">
-            <div class="col-12 col-sm-8 col-md-6 col-lg-5 col-xl-4">
+            <div class="col-12 col-sm-8 col-md-8 col-lg-6 col-xl-5">
               <div class="bg-light rounded p-4 p-sm-5 my-4 mx-3">
-                <div class="d-flex align-items-center justify-content-between mb-3">
+                <div class="d-flex align-items-center justify-content-between mb-3">        
                   <a href="index" class>
                     <h3 class="header_section"><b>Finease</b></h3>
                   </a>
                   <h3><b>Register</b></h3>
                 </div>
-                <div class="form-floating mb-3">
-                  <label for="uname">Name</label>
-                  <input type="text" class="form-control" id="uname" name="Name" placeholder="Vincent Willem van Gogh" required>
-                </div>
-                <div class="form-floating mb-3">
-                  <label for="uemail">Email address</label>
-                  <input type="email" class="form-control" id="uemail" name="Email address" placeholder="vangogh@example.com" required>
-                </div>
-                <div class="form-floating mb-4">
-                  <label for="upassword">Password</label>
-                  <input type="password" class="form-control" id="upassword" name="Password" placeholder="012345@Qq" required>
-                </div>
-                <div class="form-floating mb-4">
-                  <label for="uconpassword">Confirm password</label>
-                  <input type="password" class="form-control" id="uconpassword" name="Confirm password" placeholder="012345@Qq" required>
-                </div>
-
-                <button class="btn btn-primary py-3 w-100 mb-4">
-                  <a href="login" style="color: white; text-decoration: none;">Register</a>
-                </button>
+                <form action="/register" method="POST">
+                  <div class="form-floating mb-3">
+                    <label for="firstName">First Name</label>
+                    <input type="text" class="form-control" id="firstName" name="firstName" placeholder="Sabrina">
+                  </div>
+                  <div class="form-floating mb-3">
+                    <label for="lastName">Last Name</label>
+                    <input type="text" class="form-control" id="lastName" name="lastName" placeholder="Carpenter">
+                  </div>
+                  <div class="form-floating mb-3">
+                    <label for="username">Username</label>
+                    <input type="text" class="form-control" id="username" name="username" placeholder="sabrinacarpenter" required>
+                  </div>
+                  <div class="form-floating mb-3">
+                    <label for="email">Email address</label>
+                    <input type="email" class="form-control" id="email" name="email" placeholder="sabrinacarpenter@example.com" required>
+                  </div>
+                  <div class="form-floating mb-3">
+                    <label for="phoneNumber">Phone Number</label>
+                    <input type="text" class="form-control" id="phoneNumber" name="phoneNumber" placeholder="011123456789" required>
+                  </div>
+                  <div class="form-floating mb-4">
+                    <label for="password">Password</label>
+                    <input type="password" class="form-control" id="password" name="password" placeholder="012345@Qq" required>
+                  </div>
+                  <div class="form-floating mb-4">
+                    <label for="confirmPassword">Confirm password</label>
+                    <input type="password" class="form-control" id="confirmPassword" name="Confirm Password" placeholder="012345@Qq" required>
+                  </div>
+                  <button class="btn btn-primary py-3 w-100 mb-4">
+                    <a href="login" style="color: white; text-decoration: none;">Register</a>
+                  </button>
+                </form>
                 <p class="text-center mb-0">Already have an Account? <a href="login">Sign In</a></p>
               </div>
             </div>
@@ -96,7 +109,6 @@
 
         <div id="accessibility-widget"></div>
         <script src="/js/script.js"></script>
-
 
     </body>
 

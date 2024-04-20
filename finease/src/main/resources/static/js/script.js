@@ -171,7 +171,8 @@ function initializeTTS() {
             speechBtn.style.display = "inline"; // Show the speech button
             voiceList.style.display = "inline";
             localStorage.setItem("screenReaderState", "active"); // Save state in local storage
-            speakPageName();
+            // speakPageName();
+            handleErrorMessage();
         } else {
             removeHoverListenersFromElements();
             removeClickListenersFromElements();
@@ -205,6 +206,24 @@ function initializeTTS() {
                 isSpeaking = true;
             }
         }, 800);
+    }
+
+    function handleErrorMessage() {
+        // Check if there's an error parameter in the URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const error = urlParams.get('error');
+        
+        if (error) {
+            playaudio("/audio/error.mp3");
+            setTimeout(function() {
+                if (error !== "" && !synth.speaking) {
+                    textToSpeech("Input invalid, please try again");
+                    isSpeaking = true;
+                }
+            }, 800);
+        }else{
+            speakPageName();
+        }
     }
 
     function addHoverListenersToElements() {
@@ -309,7 +328,7 @@ function initializeTTS() {
 
     function playaudio(audioPath) {
         var sound = new Audio(audioPath);
-        sound.volume = 0.5;
+        sound.volume = 0.8;
         sound.play();
     }
 }

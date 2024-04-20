@@ -57,31 +57,34 @@
             <div class="col-md-8 mx-auto">
                 <div class="card">
                     <div class="card-body">
-                        <form>
-                            <div class="mb-3">
-                                <label for="pname" class="form-label">Name</label>
-                                <input type="text" class="form-control" id="pname" name="Name"
-                                    value="Vincent Willem van Gogh" readonly>
+                        <form id="profileForm" method="POST" action="/profile/update">
+
+                            <div class="form-floating mb-3">
+                              <label for="firstName">First Name</label>
+                              <input type="text" class="form-control" id="firstName" name="firstName" th:value="${firstName}" readonly>
                             </div>
-                            <div class="mb-3">
-                                <label for="pemail" class="form-label">Email address</label>
-                                <input type="email" class="form-control" id="pemail" name="Email address"
-                                    value="vangogh@example.com" readonly>
+                            <div class="form-floating mb-3">
+                              <label for="lastName">Last Name</label>
+                              <input type="text" class="form-control" id="lastName" name="lastName" th:value="${lastName}" readonly>
                             </div>
-                            <div class="mb-3">
-                                <label for="pdob" class="form-label">Date of Birth</label>
-                                <input type="text" class="form-control" id="pdob" name="Date of Birth"
-                                    value="20 September 2000" readonly>
+                            <div class="form-floating mb-3">
+                              <label for="username">Username</label>
+                              <input type="text" class="form-control" id="username" name="username" th:value="${username}" readonly>
                             </div>
-                            <div class="mb-3">
-                                <label for="pgender" class="form-label">Gender</label>
-                                <input type="text" class="form-control" id="pgender" name="Gender"
-                                    value="Male" readonly>
+                            <div class="form-floating mb-3">
+                              <label for="email">Email address</label>
+                              <input type="email" class="form-control" id="email" name="email" th:value="${email}" readonly>
                             </div>
-                            <div class="text-center">
-                                <button type="button" class="btn btn-primary w-45" id="editProfileBtn">Edit</button>
+                            <div class="form-floating mb-3">
+                              <label for="phoneNumber">Phone Number</label>
+                              <input type="text" class="form-control" id="phoneNumber" name="phoneNumber" th:value="${phoneNumber}" readonly>
                             </div>
-                        </form>
+                            <div class="form-floating mb-4">
+                              <label for="password">Password</label>
+                              <input type="password" class="form-control" id="password" name="password" th:value="${password}" readonly>
+                            </div>
+                            <button class="btn btn-primary py-3 w-100 mb-4" id="editProfileBtn">Edit</button>
+                          </form>
                     </div>
                 </div>
             </div>
@@ -91,6 +94,7 @@
 
     <div id="accessibility-widget"></div>
     <script src="/js/script.js"></script>
+    <script src="/js/page.js"></script>
 
 </body>
 

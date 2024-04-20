@@ -11,27 +11,27 @@
   <meta name="keywords" content />
   <meta name="description" content />
   <meta name="author" content />
-  <link rel="shortcut icon" href="images/favicon.png" type>
+  <link rel="shortcut icon" href="images/favicon.png">
 
   <title> Login </title>
 
   <!-- bootstrap core css -->
-  <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+  <link rel="stylesheet" href="css/bootstrap.css" />
 
   <!-- fonts style -->
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
 
   <!--owl slider stylesheet -->
-  <link rel="stylesheet" type="text/css"
+  <link rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
 
   <!-- font awesome style -->
-  <link href="css/font-awesome.min.css" rel="stylesheet" />
+  <link href="css/font-awesome.min.css" rel="stylesheet"/>
 
   <!-- Custom styles for this template -->
-  <link href="css/style.css" rel="stylesheet" />
+  <link href="css/style.css" rel="stylesheet"/>
   <!-- responsive style -->
-  <link href="css/responsive.css" rel="stylesheet" />
+  <link href="css/responsive.css" rel="stylesheet"/>
 
 </head>
 
@@ -51,33 +51,35 @@
         </div>
         <!-- Spinner End -->
 
-
         <!-- Sign In Start -->
         <div class="container-fluid">
           <div class="row h-100 align-items-center justify-content-center" style="min-height: 100vh;">
             <div class="col-12 col-sm-8 col-md-6 col-lg-5 col-xl-4">
               <div class="bg-light rounded p-4 p-sm-5 my-4 mx-3">
                 <div class="d-flex align-items-center justify-content-between mb-3">
-                  <a href="index" class>
+                  <a href="/index" class>
                     <h3 class="header_section"><b>Finease</b></h3>
                   </a>
                   <h3><b>Login</b></h3>
                 </div>
 
-                <div class="form-floating mb-3">
-                  <label for="uemail">Email address</label>
-                  <input type="email" class="form-control" id="uemail" name="Email address" placeholder="name@example.com" required>
-                </div>
-                <div class="form-floating mb-4">
-                  <label for="upassword">Password</label>
-                  <input type="password" class="form-control" id="upassword" name="Password" placeholder="Password" required>
-                </div>
-                
-                <button type="submit" class="btn btn-primary py-3 w-100 mb-4">
-                  <a href="dashboard" style="color: white; text-decoration: none;">Login</a>
-                </button>
-                <p class="text-center mb-0">Don't have an Account? <a href="register">Register</a></p>
+                <!-- Form start -->
+                <form action="/login" method="POST">
+                  <div class="form-floating mb-3">
+                    <label for="username">Username</label>
+                    <input type="username" class="form-control" id="username" name="username" placeholder="sabrinacarpenter" required>
+                  </div>
+                  <div class="form-floating mb-4">
+                    <label for="password">Password</label>
+                    <input type="password" class="form-control" id="password" name="password" placeholder="012345@Qq" required>
+                  </div>
+                  
+                  <!-- Submit button -->
+                  <button type="submit" class="btn btn-primary py-3 w-100 mb-4">Login</button>
+                </form>
+                <!-- Form end -->
 
+                <p class="text-center mb-0">Don't have an Account? <a href="register">Register</a></p>
 
                 <p class="text-center mb-0">Temp link <a href="dashboard">User</a></p>
                 <p class="text-center mb-0">Temp link <a href="manageuser">Admin</a></p>
@@ -85,8 +87,8 @@
             </div>
           </div>
         </div>
-        <!-- Sign In End -->
       </div>
+      <!-- Sign In End -->
 
       <div id="accessibility-widget"></div>
       <script src="/js/script.js"></script>
