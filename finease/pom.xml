@@ -62,18 +62,6 @@
 			<version>1.9.1</version>
 		</dependency>
 
-<<<<<<< HEAD
-=======
-		<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-security -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-security</artifactId>
-			<version>3.2.4</version>
-		</dependency>
-
-
-<<<<<<< HEAD
->>>>>>> FineaseTTS/main
 		<dependency>
 			<groupId>com.mysql</groupId>
 			<artifactId>mysql-connector-j</artifactId>
@@ -96,12 +84,6 @@
 
 
  	</dependencies>
-<<<<<<< HEAD
-=======
-=======
-	</dependencies>
->>>>>>> parent of 06fb326 (create fineasedb on mySQL. issue with dao files)
->>>>>>> FineaseTTS/main
 
 
 	<build>
