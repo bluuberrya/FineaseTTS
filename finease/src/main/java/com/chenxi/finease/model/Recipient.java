@@ -17,6 +17,10 @@ public class Recipient {
     private Long id;
     private String name;
     private String email;
+<<<<<<< HEAD
+=======
+    private String phone;
+>>>>>>> FineaseTTS/main
     private String accountNumber;
     private String description;
     
@@ -49,6 +53,17 @@ public class Recipient {
 		this.email = email;
 	}
 
+<<<<<<< HEAD
+=======
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+>>>>>>> FineaseTTS/main
 	public String getAccountNumber() {
 		return accountNumber;
 	}
