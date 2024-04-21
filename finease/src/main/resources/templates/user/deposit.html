@@ -60,13 +60,16 @@
               <h5 class="card-title">Deposit Funds</h5>
               <form action="#" method="POST">
                 <div class="form-group">
-                  <label for="accountnumber">Bank Account Number</label>
-                  <input type="text" id="accountNumber" name="accountNumber" class="form-control"
-                    placeholder="0000 0000 0000 0000" required>
+                  <label for="accountnumber">Bank Account</label>
+                    <select class="form-control" th:value="${accountType}" name="bankAccount" id="accountType"
+                            required="required">
+                        <option selected="selected">Current</option>
+                        <option>Savings</option>
+                    </select>
                 </div>
                 <div class="form-group">
                   <label for="depositAmount">Amount to Deposit (RM)</label>
-                  <input type="number" id="depositAmount" name="depositAmount" class="form-control"
+                  <input th:value="${amount}" type="number" id="depositAmount" name="depositAmount" class="form-control"
                     placeholder="Enter amount" required>
                 </div>
                 <button type="submit" class="btn btn-primary">Deposit</button>

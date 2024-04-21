@@ -226,6 +226,24 @@ function initializeTTS() {
         }
     }
 
+    function convertDigitsToWords(number) {
+        const digitsToWords = {
+            '0': 'zero',
+            '1': 'one',
+            '2': 'two',
+            '3': 'three',
+            '4': 'four',
+            '5': 'five',
+            '6': 'six',
+            '7': 'seven',
+            '8': 'eight',
+            '9': 'nine'
+        };
+
+        // Convert each digit to its corresponding word
+        return number.toString().split('').map(digit => digitsToWords[digit]).join(' ');
+    }
+
     function addHoverListenersToElements() {
         let elements = document.querySelectorAll('h1, h2, h3, h4, h5, p, a, input, textarea, button, img[alt], select');
         elements.forEach(element => {
@@ -300,13 +318,18 @@ function initializeTTS() {
         } else if (elementType === "button") {
             hoverText = `${itemText} button`;
         } else if (elementType === "select") {
-            hoverText = `${this.name}, currently selected${this.value}`;
-
+            // hoverText = `${this.name}, currently selected${this.value}`;
+            let options = Array.from(this.options).map(option => option.text).join(", ");
+            hoverText = `${this.name}, currently selected${this.value}. The available options are ${options}`;    
         } else {
             hoverText = `${itemText}`;
         }
 
-        // Set the text to be spoken if it's not empty
+        if (hoverText.includes("Account Number:")) {
+            let digits = hoverText.match(/\d+/g).join("");
+            hoverText = hoverText.replace(/\d+/g, convertDigitsToWords(digits));
+        }
+
         if (hoverText !== "" && !synth.speaking) {
             textToSpeech(hoverText);
             isSpeaking = true;

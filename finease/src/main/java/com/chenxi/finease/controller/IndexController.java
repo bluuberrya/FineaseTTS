@@ -1,5 +1,7 @@
 package com.chenxi.finease.controller;
 
+import java.math.BigDecimal;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -127,8 +129,34 @@ public class IndexController {
 //user
 
 	@GetMapping("/dashboard")
-	public String dashboard() {
+	public String showDashboard(HttpSession session, Model model) {
+		// Retrieve the username from the session
+		String username = (String) session.getAttribute("username");
 
+		// Check if the username is not null
+		if (username != null) {
+			// Retrieve the user object from the database using the username
+			User user = userService.findByUsername(username);
+
+			// Assuming the user object contains information about current and savings accounts
+			// You can retrieve the account numbers and balances from the user object
+			int currentAccountNumber = user.getCurrentAccount().getAccountNumber();
+			BigDecimal currentBalance = user.getCurrentAccount().getAccountBalance();
+			int savingsAccountNumber = user.getSavingsAccount().getAccountNumber();
+			BigDecimal savingsBalance = user.getSavingsAccount().getAccountBalance();
+
+			// Pass the account details to the dashboard page
+			model.addAttribute("currentAccountNumber", currentAccountNumber);
+			model.addAttribute("currentBalance", currentBalance);
+			model.addAttribute("savingsAccountNumber", savingsAccountNumber);
+			model.addAttribute("savingsBalance", savingsBalance);
+
+			System.out.println("\n\n\n"+ currentAccountNumber);
+		} else {
+			// If the username is null, redirect to the login page
+			return "redirect:/login";
+		}
+		// Return the view name for the dashboard page
 		return "user/dashboard";
 	}
 

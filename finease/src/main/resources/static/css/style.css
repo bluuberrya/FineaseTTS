@@ -906,15 +906,14 @@ a:focus {
 
 /* Dashboard section */
 .dashboard_section {
-  padding: 50px 0;
-  margin-top: 45px;
-  margin-bottom: 45px;
+  padding: 20px 0;
 }
 
 .dashboard_section .card {
   border: none;
   border-radius: 10px;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  padding: 10px 0;
 }
 
 .dashboard_section .card-body {
@@ -925,11 +924,11 @@ a:focus {
   font-size: 24px;
   font-weight: bold;
   color: #333;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 .dashboard_section .account-details {
-  margin-bottom: 20px;
+  margin-bottom: 30px;
 }
 
 .dashboard_section .account-details p {
