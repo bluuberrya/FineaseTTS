@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- Basic -->
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <!-- Mobile Metas -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <!-- Site Metas -->
+    <meta name="keywords" content />
+    <meta name="description" content />
+    <meta name="author" content />
+    <link rel="shortcut icon" href="images/favicon.png" type>
+
+    <title> Add User </title>
+
+    <!-- bootstrap core css -->
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+
+    <!-- fonts style -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+
+    <!--owl slider stylesheet -->
+    <link rel="stylesheet" type="text/css"
+        href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
+
+    <!-- font awesome style -->
+    <link href="css/font-awesome.min.css" rel="stylesheet" />
+
+    <!-- Custom styles for this template -->
+    <link href="css/style.css" rel="stylesheet" />
+    <!-- responsive style -->
+    <link href="css/responsive.css" rel="stylesheet" />
+
+</head>
+
+<body class="sub_page">
+
+    <div class="hero_area">
+
+        <div class="hero_bg_box">
+            <div class="bg_img_box">
+                <img src="images/hero-bg.png" alt>
+            </div>
+        </div>
+
+        <!-- header section strats -->
+        <div id="admin-header-container"></div>
+        <!-- end header section -->
+    </div>
+
+    <!-- Start -->
+    <div class="container">
+        <h1 class="mt-5 mb-4 text-center">Add User</h1>
+        <div class="row justify-content-center">
+            <div class="col-md-8 mx-auto">
+                <div class="card">
+                    <div class="card-body">
+                        <form id="profileForm" method="POST" action="/manageuser/update">
+
+                            <div class="form-floating mb-3">
+                              <label for="firstName">First Name</label>
+                              <input type="text" class="form-control" id="firstName" name="firstName" th:value="${firstName}" readonly>
+                            </div>
+                            <div class="form-floating mb-3">
+                              <label for="lastName">Last Name</label>
+                              <input type="text" class="form-control" id="lastName" name="lastName" th:value="${lastName}" readonly>
+                            </div>
+                            <div class="form-floating mb-3">
+                              <label for="username">Username</label>
+                              <input type="text" class="form-control" id="username" name="username" th:value="${username}" readonly>
+                            </div>
+                            <div class="form-floating mb-3">
+                              <label for="email">Email address</label>
+                              <input type="email" class="form-control" id="email" name="email" th:value="${email}" readonly>
+                            </div>
+                            <div class="form-floating mb-3">
+                              <label for="phoneNumber">Phone Number</label>
+                              <input type="text" class="form-control" id="phoneNumber" name="phoneNumber" th:value="${phoneNumber}" readonly>
+                            </div>
+                            <div class="form-floating mb-4">
+                              <label for="password">Password</label>
+                              <input type="password" class="form-control" id="password" name="password" th:value="${password}" readonly>
+                            </div>
+                            <button class="btn btn-primary py-3 w-100 mb-4" id="editProfileBtn">Edit</button>
+                          </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End -->
+
+    <div id="accessibility-widget"></div>
+    <script src="/js/script.js"></script>
+    <script src="/js/page.js"></script>
+
+</body>
+
+</html>

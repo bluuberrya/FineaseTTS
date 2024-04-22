@@ -6,6 +6,8 @@ import com.chenxi.finease.model.User;
 
 public interface UserService {
     
+    User findByUserId(Long id);
+
     User findByUsername(String username);
 
     User findByEmail(String email);
@@ -28,8 +30,6 @@ public interface UserService {
 
     List<User> findUserList();
 
+    List<User> getAllUsersExceptCurrentUser(String currentUser);
 
 }
-
-
-

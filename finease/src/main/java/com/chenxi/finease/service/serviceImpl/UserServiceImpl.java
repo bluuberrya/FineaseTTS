@@ -77,6 +77,11 @@ public class UserServiceImpl implements UserService {
         return false; // User is invalid
     }
 
+    public User findByUserId(Long id) {
+            
+        return userRepository.findByUserId(id);
+    }
+
     public User findByUsername(String username) {
     	
         return userRepository.findByUsername(username);
@@ -123,6 +128,11 @@ public class UserServiceImpl implements UserService {
     	
         return userRepository.findAll();
         
+    }
+
+    @Override
+    public List<User> getAllUsersExceptCurrentUser(String currentUser) {
+        return userRepository.findAllExceptCurrentUser(currentUser);
     }
 
 }

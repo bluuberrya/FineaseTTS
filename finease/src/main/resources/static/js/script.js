@@ -37,7 +37,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 });
 
-
 function highlightCurrentPage() {
     // Get the current URL
     var currentUrl = window.location.href;
@@ -58,7 +57,6 @@ function highlightCurrentPage() {
         }
     });
 }
-
 
 function initializeTTS() {
     const voiceList = document.getElementById("voiceList"),
@@ -212,6 +210,7 @@ function initializeTTS() {
         // Check if there's an error parameter in the URL
         const urlParams = new URLSearchParams(window.location.search);
         const error = urlParams.get('error');
+        const transaction = urlParams.get('transaction');
         
         if (error) {
             playaudio("/audio/error.mp3");
@@ -221,10 +220,18 @@ function initializeTTS() {
                     isSpeaking = true;
                 }
             }, 800);
-        }else{
+        } else if (transaction === "Success") {
+            playaudio("/audio/success.mp3");
+            setTimeout(function() {
+                if (error !== "" && !synth.speaking) {
+                    textToSpeech("Transaction successful");
+                    isSpeaking = true;
+                }
+            }, 800);
+        } else {
             speakPageName();
         }
-    }
+    }    
 
     function convertDigitsToWords(number) {
         const digitsToWords = {
@@ -245,7 +252,7 @@ function initializeTTS() {
     }
 
     function addHoverListenersToElements() {
-        let elements = document.querySelectorAll('h1, h2, h3, h4, h5, p, a, input, textarea, button, img[alt], select');
+        let elements = document.querySelectorAll('h1, h2, h3, h4, h5, p, a, input, textarea, button, img[alt], select, label,tr, embed');
         elements.forEach(element => {
             element.addEventListener("mouseenter", hoverEventListener);
             element.addEventListener("mouseleave", pause);
@@ -260,7 +267,7 @@ function initializeTTS() {
     }
 
     function removeHoverListenersFromElements() {
-        let elements = document.querySelectorAll('h1, h2, h3, h4, h5, p, a, input, textarea, button, img[alt], select');
+        let elements = document.querySelectorAll('h1, h2, h3, h4, h5, p, a, input, textarea, button, img[alt], select, label, tr, embed');
         elements.forEach(element => {
             element.removeEventListener("mouseenter", hoverEventListener);
             element.removeEventListener("mouseleave", pause);
@@ -299,42 +306,54 @@ function initializeTTS() {
         }
     }
 
-    function hoverEventListener() {
+    async function hoverEventListener() {
         let itemText = this.textContent;
         let elementType = this.tagName.toLowerCase();
         let hoverText = "";
-
-        // Determine the appropriate hover text based on the element type
-        if (elementType === "img") {
-            hoverText = this.alt;
-        } else if (elementType === "textarea") {
-            hoverText = `${itemText} text area`;
-        } else if (elementType === "input") {
-            if (this.readOnly) {
-                hoverText = `${this.name}, ${this.value}`;
-            } else {
-                hoverText = `${itemText} ${this.name} input field`;
-            }
-        } else if (elementType === "button") {
-            hoverText = `${itemText} button`;
-        } else if (elementType === "select") {
-            // hoverText = `${this.name}, currently selected${this.value}`;
-            let options = Array.from(this.options).map(option => option.text).join(", ");
-            hoverText = `${this.name}, currently selected${this.value}. The available options are ${options}`;    
+    
+        if (elementType === "tr") {
+            let rowCells = this.cells;
+            let rowText = Array.from(rowCells).map(cell => cell.textContent.trim()).join(', ');
+            hoverText = `Row details: ${rowText}`;      
+            
         } else {
-            hoverText = `${itemText}`;
+            if (elementType === "img") {
+                hoverText = this.alt;
+            } else if (elementType === "textarea") {
+                hoverText = `${itemText} text area`;
+            } else if (elementType === "input") {
+                if (this.readOnly) {
+                    hoverText = `${this.name}, ${this.value}`;
+                } else {
+                    hoverText = `${itemText} ${this.name} input field`;
+                }
+            } else if (elementType === "button") {
+                hoverText = `${itemText} button`;
+            } else if (elementType === "select") {
+                let options = Array.from(this.options).map(option => option.text).join(", ");
+                hoverText = `${this.name}, currently selected${this.value}. The available options are ${options}`;
+            }else if (elementType === "embed"){
+                hoverText = `reading pdf`;
+            } else {
+                hoverText = `${itemText}`;
+            }
         }
-
+        
         if (hoverText.includes("Account Number:")) {
             let digits = hoverText.match(/\d+/g).join("");
             hoverText = hoverText.replace(/\d+/g, convertDigitsToWords(digits));
         }
-
+    
         if (hoverText !== "" && !synth.speaking) {
             textToSpeech(hoverText);
             isSpeaking = true;
+            if (elementType = "embed"){
+                const pdfLink = `${this.src}`.replace("http://localhost:8080/", "");
+                displayPDF(pdfLink);
+            }
         }
     }
+    
     
     function pause() {
         if (!isSpeaking) {
@@ -354,4 +373,41 @@ function initializeTTS() {
         sound.volume = 0.8;
         sound.play();
     }
+
+// Modify the displayPDF function to return a promise
+function displayPDF(pdfLink) {
+    return new Promise((resolve, reject) => {
+        fetch(pdfLink)
+            .then(response => response.blob())
+            .then(blob => {
+                var reader = new FileReader();
+                reader.onload = function () {
+                    var arrayBuffer = this.result;
+                    var pdfData = new Uint8Array(arrayBuffer);
+                    pdfjsLib.getDocument({ data: pdfData }).promise.then(pdf => {
+                        var text = "";
+                        for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+                            pdf.getPage(pageNum).then(page => {
+                                page.getTextContent().then(pageText => {
+                                    pageText.items.forEach(item => {
+                                        text += item.str + " ";
+                                    });
+                                    if (pageNum === pdf.numPages) {
+                                        textToSpeech(text); // Resolve the promise with the extracted text
+                                    }
+                                });
+                            });
+                        }
+                    });
+                };
+                reader.readAsArrayBuffer(blob);
+            })
+            .catch(error => {
+                console.error('Error fetching PDF:', error);
+                reject(error); // Reject the promise if there's an error
+            });
+    });
+}
+
+    
 }

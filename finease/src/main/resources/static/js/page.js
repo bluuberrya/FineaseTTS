@@ -1,4 +1,4 @@
-document.getElementById("editProfileBtn").addEventListener("click", function(event) {
+document.getElementById("editProfileBtn").addEventListener("click", function (event) {
     event.preventDefault(); // Prevent default form submission behavior
 
     var isEditMode = this.innerText === "Edit";
@@ -15,7 +15,7 @@ document.getElementById("editProfileBtn").addEventListener("click", function(eve
 
 function enableEditMode() {
     var inputs = document.querySelectorAll("input");
-    inputs.forEach(function(input) {
+    inputs.forEach(function (input) {
         input.removeAttribute("readonly");
     });
 
@@ -28,7 +28,7 @@ function enableEditMode() {
 
 function disableEditMode() {
     var inputs = document.querySelectorAll("input");
-    inputs.forEach(function(input) {
+    inputs.forEach(function (input) {
         input.setAttribute("readonly", true);
     });
 
@@ -42,7 +42,7 @@ function disableEditMode() {
 function getFormDataAsJson() {
     var formData = {};
     var inputs = document.querySelectorAll("input");
-    inputs.forEach(function(input) {
+    inputs.forEach(function (input) {
         formData[input.name] = input.value;
     });
     return formData;
@@ -53,7 +53,7 @@ function sendJsonData(url, data) {
     var xhr = new XMLHttpRequest();
     xhr.open("POST", url, true);
     xhr.setRequestHeader("Content-Type", "application/json");
-    xhr.onreadystatechange = function() {
+    xhr.onreadystatechange = function () {
         if (xhr.readyState === XMLHttpRequest.DONE) {
             if (xhr.status === 200) {
                 console.log("Profile updated successfully");

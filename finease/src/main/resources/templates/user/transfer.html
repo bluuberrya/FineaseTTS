@@ -58,12 +58,25 @@
           <div class="card">
             <div class="card-body">
               <h5 class="card-title">Transfer Funds</h5>
-              <form action="#" method="POST">
+              <form action="/transfer" method="POST">
+
                 <div class="form-group">
-                  <label for="recipientAccountNumber">Recipient's Bank Account Number</label>
-                  <input type="text" id="recipientAccountNumber" name="recipientAccountNumber" class="form-control"
-                    placeholder="0000 0000 0000 0000" required>
+                  <label for="transferTo">Transfer To</label>
+                  <select id="transferTo" name="transferTo" class="form-control">
+                    <option disabled="disabled" selected="selected"> -- </option>
+                    <option th:each="user: ${transferTo}" th:value="${user.username}" th:text="${user.username}"></option>
+                  </select>
                 </div>
+
+                <div class="form-group">
+                  <label for="accountnumber">Transfer From</label>
+                    <select class="form-control" th:value="${transferFrom}" name="transferFrom" id="transferFrom"
+                            required="required">
+                        <option selected="selected">Current</option>
+                        <option>Savings</option>
+                    </select>
+                </div>
+                
                 <div class="form-group">
                   <label for="transferAmount">Amount to Transfer (RM)</label>
                   <input type="number" id="transferAmount" name="transferAmount" class="form-control"

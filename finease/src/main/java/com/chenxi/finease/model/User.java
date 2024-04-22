@@ -2,8 +2,6 @@ package com.chenxi.finease.model;
 
 import jakarta.persistence.*;
 
-import java.util.List;
-
 @Entity
 public class User {
 
@@ -26,9 +24,6 @@ public class User {
 
     @OneToOne
     private SavingsAccount savingsAccount;
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Recipient> recipientList;
 
     public Long getUserId() {
         return userId;
@@ -78,14 +73,6 @@ public class User {
         this.phoneNumber = phoneNumber;
     }
 
-    public List<Recipient> getRecipientList() {
-        return recipientList;
-    }
-
-    public void setRecipientList(List<Recipient> recipientList) {
-        this.recipientList = recipientList;
-    }
-
     public String getPassword() {
         return password;
     }
@@ -119,8 +106,7 @@ public class User {
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +
-                ", phoneNumber='" + phoneNumber + '\'' +
-                ", recipientList=" + recipientList +
+                ", phoneNumber='" + phoneNumber +
                 '}';
     }
 }

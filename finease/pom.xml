@@ -17,6 +17,7 @@
 		<java.version>17</java.version>
 	</properties>
 	<dependencies>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-thymeleaf</artifactId>
@@ -82,6 +83,41 @@
 			<scope>provided</scope>
 		</dependency>
 
+		<dependency>         
+			<groupId>com.itextpdf</groupId>         
+			<artifactId>kernel</artifactId>         
+			<version>7.0.2</version>     
+      	</dependency>  
+      
+		<dependency>         
+			<groupId>com.itextpdf</groupId>         
+			<artifactId>io</artifactId>         
+			<version>7.0.2</version>     
+		</dependency>  
+		
+		<dependency>         
+			<groupId>com.itextpdf</groupId>         
+			<artifactId>layout</artifactId>         
+			<version>7.0.2</version>
+		</dependency>  
+		
+		<dependency>         
+			<groupId>com.itextpdf</groupId>         
+			<artifactId>forms</artifactId>         
+			<version>7.0.2</version>    
+		</dependency>  
+		
+		<dependency>         
+			<groupId>com.itextpdf</groupId>         
+			<artifactId>pdfa</artifactId>         
+			<version>7.0.2</version>     
+		</dependency>  
+		
+		<dependency>         
+			<groupId>com.itextpdf</groupId>         
+			<artifactId>hyph</artifactId>         
+			<version>7.0.2</version>    
+		</dependency>
 
  	</dependencies>
 

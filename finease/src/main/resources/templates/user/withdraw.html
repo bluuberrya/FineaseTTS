@@ -58,15 +58,18 @@
           <div class="card">
             <div class="card-body">
               <h5 class="card-title">Withdraw Funds</h5>
-              <form action="#" method="POST">
+              <form action="/withdraw" method="POST">
                 <div class="form-group">
-                  <label for="accountnumber">Bank Account Number</label>
-                  <input type="text" id="accountNumber" name="accountNumber" class="form-control"
-                    placeholder="0000 0000 0000 0000" required>
+                  <label for="accountnumber">Bank Account</label>
+                    <select class="form-control" th:value="${accountType}" name="bankAccount" id="accountType"
+                            required="required">
+                        <option selected="selected">Current</option>
+                        <option>Savings</option>
+                    </select>
                 </div>
                 <div class="form-group">
                   <label for="withdrawAmount">Amount to Withdraw (RM)</label>
-                  <input type="number" id="withdrawAmount" name="withdrawAmount" class="form-control"
+                  <input th:value="${amount}" type="number" id="withdrawAmount" name="withdrawAmount" class="form-control"
                     placeholder="Enter amount" required>
                 </div>
                 <button type="submit" class="btn btn-primary">Withdraw</button>

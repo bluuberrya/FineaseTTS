@@ -1,7 +1,9 @@
 package com.chenxi.finease.controller;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,8 +13,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.chenxi.finease.model.CurrentAccount;
+import com.chenxi.finease.model.CurrentTransaction;
+import com.chenxi.finease.model.SavingsAccount;
+import com.chenxi.finease.model.SavingsTransaction;
 import com.chenxi.finease.model.User;
+import com.chenxi.finease.service.AccountService;
+import com.chenxi.finease.service.TransactionService;
 import com.chenxi.finease.service.UserService;
+import com.itextpdf.text.DocumentException;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -22,12 +31,12 @@ public class IndexController {
 
     @Autowired
     private UserService userService;
-	
-	// @GetMapping("/index")
-	// public String index() {
 
-	// 	return "main/index";
-	// }
+	@Autowired
+    private AccountService accountService;
+
+	@Autowired
+	private TransactionService transactionService;
 
     @RequestMapping("/")
     public String home() {
@@ -42,20 +51,6 @@ public class IndexController {
         return "main/index";
         
     }
-
-
-	// @PostMapping("/first")
-	// public String userRegistration(@ModelAttribute User user, Model model) {
-	// // System.out.println(user.toString());
-	// // // validate
-	// // System.out.println(user.getFname());
-	// // System.out.println(user.getLname());
-	// // System.out.println(user.getDob());
-	// // System.out.println(user.getEmail());
-	// // model.addAttribute("firstname", user.getFname());
-	// // model.addAttribute("lastname", user.getLname());
-	// return "reload";
-	// }
 
 	@GetMapping("/test")
 	public String test() {
@@ -150,8 +145,6 @@ public class IndexController {
 			model.addAttribute("currentBalance", currentBalance);
 			model.addAttribute("savingsAccountNumber", savingsAccountNumber);
 			model.addAttribute("savingsBalance", savingsBalance);
-
-			System.out.println("\n\n\n"+ currentAccountNumber);
 		} else {
 			// If the username is null, redirect to the login page
 			return "redirect:/login";
@@ -161,46 +154,121 @@ public class IndexController {
 	}
 
 	@GetMapping("/deposit")
-	public String deposit() {
+	public String showDepositForm() {
 
 		return "user/deposit";
 	}
 
+	@PostMapping("/deposit")
+	public String deposit(@ModelAttribute("bankAccount") String accountType,
+							   @ModelAttribute("depositAmount") double amount,
+							   HttpSession session) 
+	{
+		// Retrieve the username from the session
+		String username = (String) session.getAttribute("username");
+	
+		// Use the service method to fetch the user object from the database using the username
+		User user = userService.findByUsername(username);
+	
+		if (user != null) {
+			try {
+				accountService.deposit(accountType, amount, user);
+			} catch (DocumentException | IOException e) {
+				e.printStackTrace();
+			}
+		} else {
+			return "redirect:/login";
+		}
+	
+		return "redirect:/deposit?transaction=Success";
+	}
+
 	@GetMapping("/withdraw")
-	public String withdraw() {
+	public String showWithdrawForm() {
 
 		return "user/withdraw";
 	}
 
-	@GetMapping("/transfer")
-	public String transfer() {
+	@PostMapping("/withdraw")
+	public String withdraw(@ModelAttribute("bankAccount") String accountType,
+							   @ModelAttribute("withdrawAmount") double amount,
+							   HttpSession session) 
+	{
+		// Retrieve the username from the session
+		String username = (String) session.getAttribute("username");
+	
+		// Use the service method to fetch the user object from the database using the username
+		User user = userService.findByUsername(username);
+	
+		if (user != null) {
+			try {
+				accountService.withdraw(accountType, amount, user);
+			} catch (DocumentException | IOException e) {
+				e.printStackTrace();
+			}
+		} else {
+			return "redirect:/login";
+		}
+	
+		return "redirect:/withdraw?transaction=Success";
+	}
 
+	@GetMapping("/transfer")
+	public String showTransferForm(HttpSession session, Model model) {
+		String username = (String) session.getAttribute("username");
+
+		if (username != null) {
+			List<User> otherUsers = userService.getAllUsersExceptCurrentUser(username);
+			model.addAttribute("transferTo", otherUsers);
+			model.addAttribute("transferFrom", "");
+			model.addAttribute("transferAmount", "");
+		} else {
+			return "redirect:/login";
+		}
+	
 		return "user/transfer";
 	}
-
-	@GetMapping("/history")
-	public String history() {
-
-		return "user/history";
-	}
 	
-	// @GetMapping("/profile")
-	// public String profile() {
+	@PostMapping("/transfer")
+	public String transfer(@ModelAttribute("transferFrom") String transferFrom,
+							@ModelAttribute("transferTo") String transferToUsername,
+							@ModelAttribute("transferAmount") String transferAmount,
+							HttpSession session) 
+	{
+		String username = (String) session.getAttribute("username");
+		User transferTo = userService.findByUsername(transferToUsername);
 
-	// 	return "user/profile";
-	// }
+		if (username != null) {
+			User currentUser = userService.findByUsername(username);
+			CurrentAccount currentAccount = currentUser.getCurrentAccount();
+			SavingsAccount savingsAccount = currentUser.getSavingsAccount();
+			transactionService.toSomeoneElseTransfer(transferTo, transferFrom, transferAmount, currentAccount, savingsAccount);
+			
+		} else {
+			return "redirect:/login";
+		}
+	
+		return "redirect:/transfer?transaction=Success";
+	}
 
-	// @GetMapping("/profile")
-	// public String showProfile(HttpSession session, Model model) {
-	// 	// Retrieve the username from the session
-	// 	String username = (String) session.getAttribute("username");
+    @GetMapping("/history")
+    public String showTransactionHistory(HttpSession session, Model model) {
+        // Retrieve the username from the session
+        String username = (String) session.getAttribute("username");
 
-	// 	// Pass the username to the profile page
-	// 	model.addAttribute("username", username);
+        if (username != null) {
+            List<CurrentTransaction> currentTransactions = transactionService.findCurrentTransactionList(username);
+            List<SavingsTransaction> savingsTransactions = transactionService.findSavingsTransactionList(username);
 
-	// 	// Return the view name for the profile page
-	// 	return "user/profile";
-	// }
+            model.addAttribute("currentTransactions", currentTransactions);
+            model.addAttribute("savingsTransactions", savingsTransactions);
+
+            return "user/history";
+        } else {
+            // If the username is null, redirect to the login page
+            return "redirect:/login";
+        }
+    }
 
 	@GetMapping("/profile")
 	public String showProfile(HttpSession session, Model model) {
@@ -234,17 +302,62 @@ public class IndexController {
     }
 
 //admin
-
 	@GetMapping("/manageuser")
-	public String manageuser() {
+    public String showManageUser(HttpSession session, Model model) {
+        String username = (String) session.getAttribute("username");
 
-		return "admin/manageuser";
+        if (username != null) {
+			List<User> users = userService.findUserList();
+            
+
+			List<CurrentAccount> currentAccounts = accountService.findAllCurrentAccountList();
+            List<SavingsAccount> savingsAccounts = accountService.findAllSavingsAccountList();
+
+			model.addAttribute("users", users);
+            model.addAttribute("currentAccounts", currentAccounts);
+            model.addAttribute("savingsAccounts", savingsAccounts);
+
+            return "admin/manageuser";
+        } else {
+            return "redirect:/login";
+        }
+    }
+
+	@GetMapping("/edituser")
+	public String editUser() {
+
+		return "admin/edituser";
+	}
+
+	@GetMapping("/adduser")
+	public String addUser() {
+
+		return "admin/adduser";
+	}
+
+	@GetMapping("/deleteuser")
+	public String deleteUser() {
+
+		return "admin/deleteuser";
 	}
 
 	@GetMapping("/activitylog")
-	public String activitylog() {
+	public String activitylog(HttpSession session, Model model) {
+        String username = (String) session.getAttribute("username");
 
-		return "admin/activitylog";
+        if (username != "admin") {
+            List<CurrentTransaction> currentTransactions = transactionService.findAllCurrentTransactionList();
+            List<SavingsTransaction> savingsTransactions = transactionService.findAllSavingsTransactionList();
+
+            model.addAttribute("currentTransactions", currentTransactions);
+            model.addAttribute("savingsTransactions", savingsTransactions);
+
+        	return "admin/activitylog";
+        } else {
+            // If the username is null, redirect to the login page
+            return "redirect:/login";
+        }
+		
 	}
 
 	@GetMapping("/systemreport")

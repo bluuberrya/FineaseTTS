@@ -1,13 +1,26 @@
 package com.chenxi.finease.service;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.List;
+
+import com.chenxi.finease.model.CurrentAccount;
 import com.chenxi.finease.model.CurrentTransaction;
+import com.chenxi.finease.model.SavingsAccount;
 import com.chenxi.finease.model.SavingsTransaction;
+import com.chenxi.finease.model.User;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
 
 public interface TransactionService {
 
-    // List<CurrentTransaction> findCurrentTransactionList(String username);
+    List<CurrentTransaction> findCurrentTransactionList(String username);
 
-    // List<SavingsTransaction> findSavingsTransactionList(String username);
+    List<SavingsTransaction> findSavingsTransactionList(String username);
+
+    List<CurrentTransaction> findAllCurrentTransactionList();
+
+    List<SavingsTransaction> findAllSavingsTransactionList();
 
     void saveCurrentDepositTransaction(CurrentTransaction currentTransaction);
 
@@ -17,16 +30,17 @@ public interface TransactionService {
 
     void saveSavingsWithdrawTransaction(SavingsTransaction savingsTransaction);
 
-    // void betweenAccountsTransfer(String transferFrom, String transferTo, String amount, CurrentAccount currentAccount, SavingsAccount savingsAccount) throws Exception;
+    void toSomeoneElseTransfer(User transferTo, String transferFrom, String amount, CurrentAccount currentAccount, SavingsAccount savingsAccount);
 
-    // List<Recipient> findRecipientList(Principal principal);
+    void generateCurrentReceipt(CurrentTransaction transaction) throws FileNotFoundException, DocumentException, IOException;
 
-    // Recipient saveRecipient(Recipient recipient);
+    void generateSavingsReceipt(SavingsTransaction transaction) throws FileNotFoundException, DocumentException, IOException;
 
-    // Recipient findRecipientByName(String recipientName);
+    String getCFileName(CurrentTransaction transaction);
 
-    // void deleteRecipientByName(String recipientName);
+    String getSFileName(SavingsTransaction transaction);
 
-    // void toSomeoneElseTransfer(Recipient recipient, String accountType, String amount, CurrentAccount currentAccount, SavingsAccount savingsAccount);
-
+    void addCTransactionDetails(Document document, CurrentTransaction transaction) throws DocumentException;
+    
+    void addSTransactionDetails(Document document, SavingsTransaction transaction) throws DocumentException;
 }
