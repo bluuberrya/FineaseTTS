@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.chenxi.finease.model.CurrentAccount;
 import com.chenxi.finease.model.CurrentTransaction;
@@ -442,8 +441,25 @@ public class IndexController {
 	}
 
 	@GetMapping("/systemreport")
-	public String systemreport() {
-
+	public String systemreport(Model model) {
+		int numberOfUsers = userService.getTotalNumberOfUsers();
+		int numberOfCurrentAccounts = accountService.getTotalNumberOfCurrentAccounts();
+		int numberOfSavingsAccounts = accountService.getTotalNumberOfSavingsAccounts();
+		int numberOfCurrentTransactions = transactionService.getTotalNumberOfCurrentTransactions();
+		int numberOfSavingsTransactions = transactionService.getTotalNumberOfSavingsTransactions();
+		int numberOfDeposits = transactionService.getTotalNumberOfDeposits();
+		int numberOfWithdrawals = transactionService.getTotalNumberOfDWithdraws();
+		int numberOfTransfers = transactionService.getTotalNumberOfTransfers();
+	
+		model.addAttribute("numberOfUsers", numberOfUsers);
+		model.addAttribute("numberOfCurrentAccounts", numberOfCurrentAccounts);
+		model.addAttribute("numberOfSavingsAccounts", numberOfSavingsAccounts);
+		model.addAttribute("numberOfCurrentTransactions", numberOfCurrentTransactions);
+		model.addAttribute("numberOfSavingsTransactions", numberOfSavingsTransactions);
+		model.addAttribute("numberOfDeposits", numberOfDeposits);
+		model.addAttribute("numberOfWithdrawals", numberOfWithdrawals);
+		model.addAttribute("numberOfTransfers", numberOfTransfers);
+	
 		return "admin/systemreport";
 	}
 

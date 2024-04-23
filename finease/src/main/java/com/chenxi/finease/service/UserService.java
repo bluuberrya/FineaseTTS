@@ -34,4 +34,6 @@ public interface UserService {
 
     List<User> getAllUsersExceptCurrentUser(String currentUser);
 
+    int getTotalNumberOfUsers();
+
 }

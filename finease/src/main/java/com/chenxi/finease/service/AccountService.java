@@ -23,4 +23,8 @@ public interface AccountService {
 
     List<CurrentAccount> findAllCurrentAccountList();
 
+    int getTotalNumberOfSavingsAccounts();
+
+    int getTotalNumberOfCurrentAccounts();
+
 }

@@ -19,4 +19,6 @@ public interface CurrentAccountRepository extends JpaRepository<CurrentAccount, 
     @SuppressWarnings("null")
     @Query("SELECT ca FROM CurrentAccount ca WHERE ca.id <> 1")
     List<CurrentAccount> findAll();
+
+    long count();
 }

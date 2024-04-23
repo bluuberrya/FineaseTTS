@@ -212,4 +212,86 @@ public class TransactionServiceImpl implements TransactionService {
     
     }
 
+    @Override
+    public int getTotalNumberOfCurrentTransactions() {
+        return (int) currentTransactionRepository.count();
+    }
+
+    @Override
+    public int getTotalNumberOfSavingsTransactions() {
+        return (int) savingsTransactionRepository.count();
+    }
+
+    @Override
+    public int getTotalNumberOfDeposits() {
+        List<CurrentTransaction> currentTransactions = currentTransactionRepository.findAll();
+        List<SavingsTransaction> savingsTransactions = savingsTransactionRepository.findAll();
+
+        int depositCount = 0;
+
+        // Count deposits in current transactions
+        for (CurrentTransaction transaction : currentTransactions) {
+            if (transaction.getDescription().toLowerCase().contains("deposit")) {
+                depositCount++;
+            }
+        }
+
+        // Count deposits in savings transactions
+        for (SavingsTransaction transaction : savingsTransactions) {
+            if (transaction.getDescription().toLowerCase().contains("deposit")) {
+                depositCount++;
+            }
+        }
+
+        return depositCount;
+    }
+
+    @Override
+    public int getTotalNumberOfDWithdraws() {
+        List<CurrentTransaction> currentTransactions = currentTransactionRepository.findAll();
+        List<SavingsTransaction> savingsTransactions = savingsTransactionRepository.findAll();
+
+        int withdrawCount = 0;
+
+        // Count withdrawals in current transactions
+        for (CurrentTransaction transaction : currentTransactions) {
+            if (transaction.getDescription().toLowerCase().contains("withdraw")) {
+                withdrawCount++;
+            }
+        }
+
+        // Count withdrawals in savings transactions
+        for (SavingsTransaction transaction : savingsTransactions) {
+            if (transaction.getDescription().toLowerCase().contains("withdraw")) {
+                withdrawCount++;
+            }
+        }
+
+        return withdrawCount;
+    }
+
+    @Override
+    public int getTotalNumberOfTransfers() {
+        List<CurrentTransaction> currentTransactions = currentTransactionRepository.findAll();
+        List<SavingsTransaction> savingsTransactions = savingsTransactionRepository.findAll();
+
+        int transferCount = 0;
+
+        // Count transfers in current transactions
+        for (CurrentTransaction transaction : currentTransactions) {
+            if (transaction.getDescription().toLowerCase().contains("transfer")) {
+                transferCount++;
+            }
+        }
+
+        // Count transfers in savings transactions
+        for (SavingsTransaction transaction : savingsTransactions) {
+            if (transaction.getDescription().toLowerCase().contains("transfer")) {
+                transferCount++;
+            }
+        }
+
+        return transferCount;
+    }
+
 }

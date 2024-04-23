@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl implements UserService {
 
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
-    
+
     @Autowired
     private UserRepository userRepository;
 
@@ -36,18 +36,18 @@ public class UserServiceImpl implements UserService {
         User localUser = userRepository.findByUsername(user.getUsername());
 
         if (localUser != null) {
-            
+
             logger.info("User with username {} already exist. ", user.getUsername());
-            
+
         } else {
             user.setCurrentAccount(accountService.createCurrentAccount());
             user.setSavingsAccount(accountService.createSavingsAccount());
-    
+
             localUser = userRepository.save(user);
         }
         return localUser;
     }
-    
+
     public User updateUser(User updatedUser) {
         // Retrieve the user from the database
         User user = userRepository.findByUserId(updatedUser.getUserId());
@@ -68,7 +68,7 @@ public class UserServiceImpl implements UserService {
         }
         return user;
     }
-    
+
     @Override
     public User deleteUser(User user) {
         userRepository.deleteById(user.getUserId());
@@ -81,66 +81,65 @@ public class UserServiceImpl implements UserService {
     public boolean validateUser(String username, String password) {
 
         User user = userRepository.findByUsername(username);
-        
+
         // Check if the user exists and if the provided password matches
         if (user != null && user.getPassword().equals(password)) {
             return true; // User is valid
         }
-        
+
         return false; // User is invalid
     }
 
     public User findByUserId(Long id) {
-            
+
         return userRepository.findByUserId(id);
     }
 
     public User findByUsername(String username) {
-    	
+
         return userRepository.findByUsername(username);
-        
+
     }
 
     public User findByEmail(String email) {
-    	
+
         return userRepository.findByEmail(email);
     }
 
     public boolean checkUserExists(String username, String email) {
-    	
+
         return checkUsernameExists(username) || checkEmailExists(username);
-        
+
     }
 
     public boolean checkUsernameExists(String username) {
-    	
+
         return null != findByUsername(username);
-        
+
     }
 
     public boolean checkEmailExists(String email) {
-    	
+
         return null != findByEmail(email);
-        
 
     }
 
     public void save(User user) {
-    	
+
         userRepository.save(user);
-        
+
     }
 
     public User saveUser(User user) {
-    	
+
         return userRepository.save(user);
-        
+
     }
 
     public List<User> findUserList() {
-    	
+
         return userRepository.findAll();
-        
+
     }
 
     @Override
@@ -148,7 +147,9 @@ public class UserServiceImpl implements UserService {
         return userRepository.findAllExceptCurrentUser(currentUser);
     }
 
+    @Override
+    public int getTotalNumberOfUsers() {
+        return (int) userRepository.count();
+    }
+
 }
-
-
-

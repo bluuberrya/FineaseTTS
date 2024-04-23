@@ -128,4 +128,14 @@ public class AccountServiceImpl implements AccountService{
         
     }
 
+    @Override
+    public int getTotalNumberOfSavingsAccounts() {
+        return (int) savingsAccountRepository.count();
+    }
+
+    @Override
+    public int getTotalNumberOfCurrentAccounts() {
+        return (int) currentAccountRepository.count();
+    }
+
 }

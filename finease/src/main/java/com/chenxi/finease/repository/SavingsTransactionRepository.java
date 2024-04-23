@@ -15,5 +15,5 @@ public interface SavingsTransactionRepository extends JpaRepository<SavingsTrans
 
     @SuppressWarnings("null")
     List<SavingsTransaction> findAll();
-
+    long count();
 }

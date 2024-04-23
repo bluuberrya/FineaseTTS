@@ -16,5 +16,5 @@ public interface CurrentTransactionRepository extends JpaRepository<CurrentTrans
     
     @SuppressWarnings("null")
     List<CurrentTransaction> findAll();
-    
+    long count();
 }

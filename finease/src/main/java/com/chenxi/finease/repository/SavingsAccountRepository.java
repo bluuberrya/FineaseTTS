@@ -19,4 +19,6 @@ public interface SavingsAccountRepository extends JpaRepository<SavingsAccount, 
     @SuppressWarnings("null")
     @Query("SELECT ca FROM SavingsAccount ca WHERE ca.id <> 1")
     List<SavingsAccount> findAll();
+
+    long count();
 }

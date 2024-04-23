@@ -43,4 +43,14 @@ public interface TransactionService {
     void addCTransactionDetails(Document document, CurrentTransaction transaction) throws DocumentException;
     
     void addSTransactionDetails(Document document, SavingsTransaction transaction) throws DocumentException;
+
+    int getTotalNumberOfCurrentTransactions();
+
+    int getTotalNumberOfDeposits();
+
+    int getTotalNumberOfSavingsTransactions();
+
+    int getTotalNumberOfDWithdraws();
+
+    int getTotalNumberOfTransfers();
 }

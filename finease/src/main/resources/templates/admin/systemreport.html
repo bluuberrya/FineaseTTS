@@ -30,8 +30,9 @@
 
     <!-- Custom styles for this template -->
     <link href="css/style.css" rel="stylesheet" />
-    <!-- responsive style -->
-    <link href="css/responsive.css" rel="stylesheet" />
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+
 
 </head>
 
@@ -50,30 +51,33 @@
         <!-- end header section -->
     </div>
 
-    <!-- Dashboard section -->
-    <section class="dashboard_section layout_padding">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-8 mx-auto">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">Account Overview</h5>
-                            <div class="account-details">
-                                <p>Current Balance: RM 1000</p>
-                                <p>Savings Balance: RM 500</p>
-                            </div>
-                            <div class="action-buttons">
-                                <a class="btn btn-primary" href="deposit"><span>Deposit</span></a>
-                                <a class="btn btn-primary" href="withdraw"><span>Withdraw</span></a>
-                                <a class="btn btn-primary" href="transfer"><span>Transfer</span></a>
+    <!-- system report section -->
+    <div class="container mt-5">
+        <h1 class="mt-5 mb-4 text-center">System Report</h1>
+        <section class="dashboard_section layout_padding">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-8 mx-auto">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">General</h5>
+                                <p>Number of users: <span th:text="${numberOfUsers}"></span></p>
+                                <p>Number of savings accounts: <span th:text="${numberOfSavingsAccounts}"></span></p>
+                                <p>Number of current transactions: <span th:text="${numberOfCurrentTransactions}"></span></p>
+                                <p>Number of savings transactions: <span th:text="${numberOfSavingsTransactions}"></span></p>
+                                <br />
+                                <h5 class="card-title">Transaction</h5>
+                                <p>Number of deposits: <span th:text="${numberOfDeposits}"></span></p>
+                                <p>Number of withdrawals: <span th:text="${numberOfWithdrawals}"></span></p>
+                                <p>Number of transfers: <span th:text="${numberOfTransfers}"></span></p>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
-    <!-- End Dashboard section -->
+        </section>
+    </div>
+    <!-- End system report section -->
 
     <div id="accessibility-widget"></div>
     <script src="/js/script.js"></script>

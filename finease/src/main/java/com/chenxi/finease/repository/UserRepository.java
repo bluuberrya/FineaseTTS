@@ -26,4 +26,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("SELECT u FROM User u WHERE u.username <> :currentUsername AND u.username <> 'admin'")
     List<User> findAllExceptCurrentUser(@Param("currentUsername") String currentUser);
 
+    long count();
 }
