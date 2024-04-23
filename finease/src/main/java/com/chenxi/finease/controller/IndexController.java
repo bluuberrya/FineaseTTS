@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.chenxi.finease.model.CurrentAccount;
 import com.chenxi.finease.model.CurrentTransaction;
@@ -29,28 +31,28 @@ import jakarta.servlet.http.HttpSession;
 @Controller
 public class IndexController {
 
-    @Autowired
-    private UserService userService;
+	@Autowired
+	private UserService userService;
 
 	@Autowired
-    private AccountService accountService;
+	private AccountService accountService;
 
 	@Autowired
 	private TransactionService transactionService;
 
-    @RequestMapping("/")
-    public String home() {
-    	
-        return "redirect:/index";
-        
-    }
+	@RequestMapping("/")
+	public String home() {
 
-    @RequestMapping("/index")
-    public String index() {
-    	
-        return "main/index";
-        
-    }
+		return "redirect:/index";
+
+	}
+
+	@RequestMapping("/index")
+	public String index() {
+
+		return "main/index";
+
+	}
 
 	@GetMapping("/test")
 	public String test() {
@@ -82,46 +84,47 @@ public class IndexController {
 		return "main/team";
 	}
 
-//login and register
+	// login and register
 
-    @GetMapping("/login")
-    public String showLoginForm() {
-        return "user/login";
-    }
+	@GetMapping("/login")
+	public String showLoginForm() {
+		return "user/login";
+	}
 
-    @PostMapping("/login")
-    public String login(HttpServletRequest request, HttpSession session) {
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
+	@PostMapping("/login")
+	public String login(HttpServletRequest request, HttpSession session) {
+		String username = request.getParameter("username");
+		String password = request.getParameter("password");
 
-        if (userService.validateUser(username, password)) {
-            session.setAttribute("username", username);
+		if (userService.validateUser(username, password)) {
+			session.setAttribute("username", username);
 
-            if (username.equals("admin")) {
-                return "redirect:/manageuser";
-            } else {
-                return "redirect:/dashboard";
-            }
-        } else {
-            return "redirect:/login?error=InvalidCredentials";
-        }
-    }
+			if (username.equals("admin")) {
+				return "redirect:/manageuser";
+			} else {
+				return "redirect:/dashboard";
+			}
+		} else {
+			return "redirect:/login?error=InvalidCredentials";
+		}
+	}
 
-    @GetMapping("/register")
-    public String showRegistrationForm(Model model) {
-        User user = new User();
-        model.addAttribute("user", user);
-        return "user/register";
-    }
-
-    @PostMapping("/register")
-    public String registerUser(@ModelAttribute User user) {
+	@GetMapping("/register")
+	public String showRegistrationForm(Model model) {
+		User user = new User();
+		model.addAttribute("user", user);
 		System.out.println(user);
-        userService.createUser(user);
-        return "redirect:/login"; // Redirect to login page after registration
-    }
+		return "user/register";
+	}
 
-//user
+	@PostMapping("/register")
+	public String registerUser(@ModelAttribute User user) {
+		System.out.println(user);
+		userService.createUser(user);
+		return "redirect:/login"; // Redirect to login page after registration
+	}
+
+	// user
 
 	@GetMapping("/dashboard")
 	public String showDashboard(HttpSession session, Model model) {
@@ -133,7 +136,8 @@ public class IndexController {
 			// Retrieve the user object from the database using the username
 			User user = userService.findByUsername(username);
 
-			// Assuming the user object contains information about current and savings accounts
+			// Assuming the user object contains information about current and savings
+			// accounts
 			// You can retrieve the account numbers and balances from the user object
 			int currentAccountNumber = user.getCurrentAccount().getAccountNumber();
 			BigDecimal currentBalance = user.getCurrentAccount().getAccountBalance();
@@ -161,15 +165,15 @@ public class IndexController {
 
 	@PostMapping("/deposit")
 	public String deposit(@ModelAttribute("bankAccount") String accountType,
-							   @ModelAttribute("depositAmount") double amount,
-							   HttpSession session) 
-	{
+			@ModelAttribute("depositAmount") double amount,
+			HttpSession session) {
 		// Retrieve the username from the session
 		String username = (String) session.getAttribute("username");
-	
-		// Use the service method to fetch the user object from the database using the username
+
+		// Use the service method to fetch the user object from the database using the
+		// username
 		User user = userService.findByUsername(username);
-	
+
 		if (user != null) {
 			try {
 				accountService.deposit(accountType, amount, user);
@@ -179,7 +183,7 @@ public class IndexController {
 		} else {
 			return "redirect:/login";
 		}
-	
+
 		return "redirect:/deposit?transaction=Success";
 	}
 
@@ -191,15 +195,15 @@ public class IndexController {
 
 	@PostMapping("/withdraw")
 	public String withdraw(@ModelAttribute("bankAccount") String accountType,
-							   @ModelAttribute("withdrawAmount") double amount,
-							   HttpSession session) 
-	{
+			@ModelAttribute("withdrawAmount") double amount,
+			HttpSession session) {
 		// Retrieve the username from the session
 		String username = (String) session.getAttribute("username");
-	
-		// Use the service method to fetch the user object from the database using the username
+
+		// Use the service method to fetch the user object from the database using the
+		// username
 		User user = userService.findByUsername(username);
-	
+
 		if (user != null) {
 			try {
 				accountService.withdraw(accountType, amount, user);
@@ -209,7 +213,7 @@ public class IndexController {
 		} else {
 			return "redirect:/login";
 		}
-	
+
 		return "redirect:/withdraw?transaction=Success";
 	}
 
@@ -225,16 +229,15 @@ public class IndexController {
 		} else {
 			return "redirect:/login";
 		}
-	
+
 		return "user/transfer";
 	}
-	
+
 	@PostMapping("/transfer")
 	public String transfer(@ModelAttribute("transferFrom") String transferFrom,
-							@ModelAttribute("transferTo") String transferToUsername,
-							@ModelAttribute("transferAmount") String transferAmount,
-							HttpSession session) 
-	{
+			@ModelAttribute("transferTo") String transferToUsername,
+			@ModelAttribute("transferAmount") String transferAmount,
+			HttpSession session) {
 		String username = (String) session.getAttribute("username");
 		User transferTo = userService.findByUsername(transferToUsername);
 
@@ -242,38 +245,39 @@ public class IndexController {
 			User currentUser = userService.findByUsername(username);
 			CurrentAccount currentAccount = currentUser.getCurrentAccount();
 			SavingsAccount savingsAccount = currentUser.getSavingsAccount();
-			transactionService.toSomeoneElseTransfer(transferTo, transferFrom, transferAmount, currentAccount, savingsAccount);
-			
+			transactionService.toSomeoneElseTransfer(transferTo, transferFrom, transferAmount, currentAccount,
+					savingsAccount);
+
 		} else {
 			return "redirect:/login";
 		}
-	
+
 		return "redirect:/transfer?transaction=Success";
 	}
 
-    @GetMapping("/history")
-    public String showTransactionHistory(HttpSession session, Model model) {
-        // Retrieve the username from the session
-        String username = (String) session.getAttribute("username");
+	@GetMapping("/history")
+	public String showTransactionHistory(HttpSession session, Model model) {
+		// Retrieve the username from the session
+		String username = (String) session.getAttribute("username");
 
-        if (username != null) {
-            List<CurrentTransaction> currentTransactions = transactionService.findCurrentTransactionList(username);
-            List<SavingsTransaction> savingsTransactions = transactionService.findSavingsTransactionList(username);
+		if (username != null) {
+			List<CurrentTransaction> currentTransactions = transactionService.findCurrentTransactionList(username);
+			List<SavingsTransaction> savingsTransactions = transactionService.findSavingsTransactionList(username);
 
-            model.addAttribute("currentTransactions", currentTransactions);
-            model.addAttribute("savingsTransactions", savingsTransactions);
+			model.addAttribute("currentTransactions", currentTransactions);
+			model.addAttribute("savingsTransactions", savingsTransactions);
 
-            return "user/history";
-        } else {
-            // If the username is null, redirect to the login page
-            return "redirect:/login";
-        }
-    }
+			return "user/history";
+		} else {
+			// If the username is null, redirect to the login page
+			return "redirect:/login";
+		}
+	}
 
 	@GetMapping("/profile")
 	public String showProfile(HttpSession session, Model model) {
 		// Retrieve the username from the session
-	    String username = (String) session.getAttribute("username");
+		String username = (String) session.getAttribute("username");
 
 		// Check if the username is not null
 		if (username != null) {
@@ -295,44 +299,96 @@ public class IndexController {
 		return "user/profile";
 	}
 
-    @PostMapping("/profile/update")
-    public String updateProfile(@RequestBody User user) {
-        userService.updateUser(user);
-        return "redirect:/profile";
-    }
+	@PostMapping("/profile/update")
+	public String updateProfile(@RequestBody User user) {
+		userService.updateUser(user);
+		return "redirect:/profile?action=Success";
+	}
 
-//admin
+	// admin
 	@GetMapping("/manageuser")
-    public String showManageUser(HttpSession session, Model model) {
-        String username = (String) session.getAttribute("username");
+	public String showManageUser(HttpSession session, Model model) {
+		String username = (String) session.getAttribute("username");
 
-        if (username != null) {
+		if (username != null) {
 			List<User> users = userService.findUserList();
-            
 
 			List<CurrentAccount> currentAccounts = accountService.findAllCurrentAccountList();
-            List<SavingsAccount> savingsAccounts = accountService.findAllSavingsAccountList();
+			List<SavingsAccount> savingsAccounts = accountService.findAllSavingsAccountList();
 
 			model.addAttribute("users", users);
-            model.addAttribute("currentAccounts", currentAccounts);
-            model.addAttribute("savingsAccounts", savingsAccounts);
+			model.addAttribute("currentAccounts", currentAccounts);
+			model.addAttribute("savingsAccounts", savingsAccounts);
 
-            return "admin/manageuser";
-        } else {
-            return "redirect:/login";
-        }
-    }
+			return "admin/manageuser";
+		} else {
+			return "redirect:/login";
+		}
+	}
+
+	@GetMapping("/adduser")
+	public String addUserForm(Model model) {
+		User user = new User();
+		model.addAttribute("user", user);
+		System.out.println(user);
+
+		return "admin/adduser";
+	}
+
+	@PostMapping("/adduser")
+	public String addUser(@ModelAttribute User user) {
+		System.out.println(user);
+		userService.createUser(user);
+
+		return "admin/adduser";
+	}
 
 	@GetMapping("/edituser")
-	public String editUser() {
+	public String editUserForm(Model model) {
+
+		if (!model.containsAttribute("userEdit")) {
+			List<User> userlist = userService.getAllUsersExceptCurrentUser("admin");
+			model.addAttribute("userlist", userlist);
+		}
 
 		return "admin/edituser";
 	}
 
-	@GetMapping("/adduser")
-	public String addUser() {
+	@PostMapping("/editusersearch")
+	public String processEditUserSearchForm(Model model, @RequestParam("userlist") String username) {
 
-		return "admin/adduser";
+		// Check if the username is not null
+		if (username != null) {
+			// Retrieve the user object from the database using the username
+			User user = userService.findByUsername(username);
+
+			// Pass the user object attributes to the profile page
+			model.addAttribute("userId", user.getUserId());
+			model.addAttribute("firstName", user.getFirstName());
+			model.addAttribute("lastName", user.getLastName());
+			model.addAttribute("username", user.getUsername());
+			model.addAttribute("email", user.getEmail());
+			model.addAttribute("phoneNumber", user.getPhoneNumber());
+			model.addAttribute("password", user.getPassword());
+
+			if (!model.containsAttribute("userEdit")) {
+				List<User> userlist = userService.getAllUsersExceptCurrentUser("admin");
+				model.addAttribute("userlist", userlist);
+			}
+		} else {
+			return "redirect:/admin/edituser";
+		}
+
+		return "admin/edituser";
+	}
+
+	@PostMapping("/edituser/submit")
+	public String processEditUserSubmitForm(@ModelAttribute("userEdit") User user) {
+		
+		System.out.println("\n\n\nupdate: "+user+"\n\n\n");
+		userService.updateUser(user);
+
+		return "redirect:/edituser?action=Success";
 	}
 
 	@GetMapping("/deleteuser")
@@ -343,21 +399,20 @@ public class IndexController {
 
 	@GetMapping("/activitylog")
 	public String activitylog(HttpSession session, Model model) {
-        String username = (String) session.getAttribute("username");
+		String username = (String) session.getAttribute("username");
 
-        if (username != "admin") {
-            List<CurrentTransaction> currentTransactions = transactionService.findAllCurrentTransactionList();
-            List<SavingsTransaction> savingsTransactions = transactionService.findAllSavingsTransactionList();
+		if (username != "admin") {
+			List<CurrentTransaction> currentTransactions = transactionService.findAllCurrentTransactionList();
+			List<SavingsTransaction> savingsTransactions = transactionService.findAllSavingsTransactionList();
 
-            model.addAttribute("currentTransactions", currentTransactions);
-            model.addAttribute("savingsTransactions", savingsTransactions);
+			model.addAttribute("currentTransactions", currentTransactions);
+			model.addAttribute("savingsTransactions", savingsTransactions);
 
-        	return "admin/activitylog";
-        } else {
-            // If the username is null, redirect to the login page
-            return "redirect:/login";
-        }
-		
+			return "admin/activitylog";
+		} else {
+			// If the username is null, redirect to the login page
+			return "redirect:/login";
+		}
 	}
 
 	@GetMapping("/systemreport")
@@ -366,8 +421,7 @@ public class IndexController {
 		return "admin/systemreport";
 	}
 
-
-//common
+	// common
 	@GetMapping("/mainheader")
 	public String mainheader() {
 

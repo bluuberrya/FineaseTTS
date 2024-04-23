@@ -42,11 +42,12 @@ public class UserServiceImpl implements UserService {
     
     public User updateUser(User updatedUser) {
         // Retrieve the user from the database
-        User user = userRepository.findByUsername(updatedUser.getUsername());
+        User user = userRepository.findByUserId(updatedUser.getUserId());
         
         // Check if the user exists
         if (user != null) {
             // Update user information
+            user.setFirstName(updatedUser.getUsername());
             user.setFirstName(updatedUser.getFirstName());
             user.setLastName(updatedUser.getLastName());
             user.setEmail(updatedUser.getEmail());

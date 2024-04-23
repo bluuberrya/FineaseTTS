@@ -13,7 +13,7 @@
     <meta name="author" content />
     <link rel="shortcut icon" href="images/favicon.png" type>
 
-    <title> Edit User </title>
+    <title> Add User </title>
 
     <!-- bootstrap core css -->
     <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
@@ -50,49 +50,84 @@
         <!-- end header section -->
     </div>
 
-    <!-- Start -->
-    <div class="container">
-        <h1 class="mt-5 mb-4 text-center">Edit User</h1>
-        <div class="row justify-content-center">
-            <div class="col-md-8 mx-auto">
-                <div class="card">
-                    <div class="card-body">
-                        <form id="profileForm" method="POST" action="/manageuser/update">
-
-                            <div class="form-floating mb-3">
-                              <label for="firstName">First Name</label>
-                              <input type="text" class="form-control" id="firstName" name="firstName" th:value="${firstName}" readonly>
-                            </div>
-                            <div class="form-floating mb-3">
-                              <label for="lastName">Last Name</label>
-                              <input type="text" class="form-control" id="lastName" name="lastName" th:value="${lastName}" readonly>
-                            </div>
-                            <div class="form-floating mb-3">
-                              <label for="username">Username</label>
-                              <input type="text" class="form-control" id="username" name="username" th:value="${username}" readonly>
-                            </div>
-                            <div class="form-floating mb-3">
-                              <label for="email">Email address</label>
-                              <input type="email" class="form-control" id="email" name="email" th:value="${email}" readonly>
-                            </div>
-                            <div class="form-floating mb-3">
-                              <label for="phoneNumber">Phone Number</label>
-                              <input type="text" class="form-control" id="phoneNumber" name="phoneNumber" th:value="${phoneNumber}" readonly>
-                            </div>
-                            <div class="form-floating mb-4">
-                              <label for="password">Password</label>
-                              <input type="password" class="form-control" id="password" name="password" th:value="${password}" readonly>
-                            </div>
-                            <button class="btn btn-primary py-3 w-100 mb-4" id="editProfileBtn">Edit</button>
-                          </form>
-                    </div>
+  <!-- Start -->
+  <div class="container">
+    <h1 class="mt-5 mb-4 text-center">Edit User</h1>
+    <div class="row justify-content-center">
+      <div class="col-md-8 mx-auto">
+        <div class="card">
+          <div class="card-body">
+            <form id="editUserSearchForm" action="/editusersearch" method="POST">
+              <div class="row justify-content-center">
+                <div class="col-md-12">
+                  <div class="form-floating mb-3 text-center">
+                    <label for="userlist"><b>Select User</b></label>
+                    <select class="form-select custom-width" id="userlist" name="userlist">
+                      <option disabled="disabled" selected="selected"> -- </option>
+                      <option th:each="user : ${userlist}" th:value="${user.username}" th:text="${user.username}"></option>
+                    </select>
+                  </div>
                 </div>
-            </div>
+              </div>
+              <div class="row justify-content-center">
+                <div class="col-md-12 text-center">
+                  <button type="submit" class="btn btn-primary w-100 mb-4">Search</button>
+                </div>
+              </div>
+            </form>
+          </div>
         </div>
+      </div>
     </div>
+  </div>
+  
+  <br>
+  
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-8 mx-auto">
+        <div class="card">
+          <div class="card-body">
+            <form id="editUserForm" method="POST" action="/edituser/submit" th:object="${userEdit}">
+              <div class="form-floating mb-3">
+                <label for="userId">User ID</label>
+                <input type="text" class="form-control" id="userId" name="userId" th:value="${userId}"  readonly>
+              </div>
+              <div class="form-floating mb-3">
+                <label for="userId">Username</label>
+                <input type="text" class="form-control" id="username" name="username" th:value="${username}" required>
+              </div>
+              <div class="form-floating mb-3">
+                <label for="firstName">First Name</label>
+                <input type="text" class="form-control" id="firstName" name="firstName" th:value="${firstName}" required>
+              </div>
+              <div class="form-floating mb-3">
+                <label for="lastName">Last Name</label>
+                <input type="text" class="form-control" id="lastName" name="lastName" th:value="${lastName}" required>
+              </div>
+              <div class="form-floating mb-3">
+                <label for="email">Email</label>
+                <input type="email" class="form-control" id="email" name="email" th:value="${email}" required>
+              </div>
+              <div class="form-floating mb-3">
+                <label for="phoneNumber">Phone Number</label>
+                <input type="text" class="form-control" id="phoneNumber" name="phoneNumber" th:value="${phoneNumber}" required>
+              </div>
+              <div class="form-floating mb-3">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" id="password" name="password" th:value="${password}" required>
+              </div>
+              <button type="submit" class="btn btn-primary w-100 mb-4" id="saveButton">Save</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
     <!-- End -->
 
     <div id="accessibility-widget"></div>
+    
     <script src="/js/script.js"></script>
     <script src="/js/page.js"></script>
 

@@ -57,33 +57,32 @@
             <div class="col-md-8 mx-auto">
                 <div class="card">
                     <div class="card-body">
-                        <form id="profileForm" method="POST" action="/manageuser/update">
-
+                        <form id="profileForm" method="POST" action="/adduser">
                             <div class="form-floating mb-3">
                               <label for="firstName">First Name</label>
-                              <input type="text" class="form-control" id="firstName" name="firstName" th:value="${firstName}" readonly>
+                              <input type="text" class="form-control" id="firstName" name="firstName" required>
                             </div>
                             <div class="form-floating mb-3">
                               <label for="lastName">Last Name</label>
-                              <input type="text" class="form-control" id="lastName" name="lastName" th:value="${lastName}" readonly>
+                              <input type="text" class="form-control" id="lastName" name="lastName" required>
                             </div>
                             <div class="form-floating mb-3">
                               <label for="username">Username</label>
-                              <input type="text" class="form-control" id="username" name="username" th:value="${username}" readonly>
+                              <input type="text" class="form-control" id="username" name="username" required>
                             </div>
                             <div class="form-floating mb-3">
                               <label for="email">Email address</label>
-                              <input type="email" class="form-control" id="email" name="email" th:value="${email}" readonly>
+                              <input type="email" class="form-control" id="email" name="email" required>
                             </div>
                             <div class="form-floating mb-3">
                               <label for="phoneNumber">Phone Number</label>
-                              <input type="text" class="form-control" id="phoneNumber" name="phoneNumber" th:value="${phoneNumber}" readonly>
+                              <input type="text" class="form-control" id="phoneNumber" name="phoneNumber"required>
                             </div>
                             <div class="form-floating mb-4">
                               <label for="password">Password</label>
-                              <input type="password" class="form-control" id="password" name="password" th:value="${password}" readonly>
+                              <input type="password" class="form-control" id="password" name="password" required>
                             </div>
-                            <button class="btn btn-primary py-3 w-100 mb-4" id="editProfileBtn">Edit</button>
+                            <button class="btn btn-primary py-3 w-100 mb-4" type="submit" id="saveBtn">Save</button>
                           </form>
                     </div>
                 </div>
