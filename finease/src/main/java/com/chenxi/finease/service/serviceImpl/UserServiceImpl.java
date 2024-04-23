@@ -1,6 +1,8 @@
 package com.chenxi.finease.service.serviceImpl;
 
 import com.chenxi.finease.model.User;
+import com.chenxi.finease.repository.CurrentAccountRepository;
+import com.chenxi.finease.repository.SavingsAccountRepository;
 import com.chenxi.finease.repository.UserRepository;
 import com.chenxi.finease.service.AccountService;
 import com.chenxi.finease.service.UserService;
@@ -19,6 +21,12 @@ public class UserServiceImpl implements UserService {
     
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private CurrentAccountRepository currentAccountRepository;
+
+    @Autowired
+    private SavingsAccountRepository savingsAccountRepository;
 
     @Autowired
     private AccountService accountService;
@@ -43,7 +51,6 @@ public class UserServiceImpl implements UserService {
     public User updateUser(User updatedUser) {
         // Retrieve the user from the database
         User user = userRepository.findByUserId(updatedUser.getUserId());
-        
         // Check if the user exists
         if (user != null) {
             // Update user information
@@ -53,17 +60,22 @@ public class UserServiceImpl implements UserService {
             user.setEmail(updatedUser.getEmail());
             user.setPhoneNumber(updatedUser.getPhoneNumber());
             user.setPassword(updatedUser.getPassword());
-    
             // Save the updated user to the database
             user = userRepository.save(user);
         } else {
             // Handle case where user is not found
             System.out.println("User not found!");
         }
-    
         return user;
     }
     
+    @Override
+    public User deleteUser(User user) {
+        userRepository.deleteById(user.getUserId());
+        savingsAccountRepository.deleteById(user.getUserId());
+        currentAccountRepository.deleteById(user.getUserId());
+        return user;
+    }
 
     @Override
     public boolean validateUser(String username, String password) {

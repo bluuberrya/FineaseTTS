@@ -340,9 +340,10 @@ public class IndexController {
 		System.out.println(user);
 		userService.createUser(user);
 
-		return "admin/adduser";
+		return "redirect:/adduser?action=Success";
 	}
 
+//edit user
 	@GetMapping("/edituser")
 	public String editUserForm(Model model) {
 
@@ -356,13 +357,8 @@ public class IndexController {
 
 	@PostMapping("/editusersearch")
 	public String processEditUserSearchForm(Model model, @RequestParam("userlist") String username) {
-
-		// Check if the username is not null
 		if (username != null) {
-			// Retrieve the user object from the database using the username
 			User user = userService.findByUsername(username);
-
-			// Pass the user object attributes to the profile page
 			model.addAttribute("userId", user.getUserId());
 			model.addAttribute("firstName", user.getFirstName());
 			model.addAttribute("lastName", user.getLastName());
@@ -384,18 +380,48 @@ public class IndexController {
 
 	@PostMapping("/edituser/submit")
 	public String processEditUserSubmitForm(@ModelAttribute("userEdit") User user) {
-		
-		System.out.println("\n\n\nupdate: "+user+"\n\n\n");
 		userService.updateUser(user);
-
 		return "redirect:/edituser?action=Success";
 	}
 
+//delete user
 	@GetMapping("/deleteuser")
-	public String deleteUser() {
-
+	public String deleteUserForm(Model model) {
+		if (!model.containsAttribute("userDelete")) {
+			List<User> userlist = userService.getAllUsersExceptCurrentUser("admin");
+			model.addAttribute("userlist", userlist);
+		}
 		return "admin/deleteuser";
 	}
+
+	@PostMapping("/deleteusersearch")
+	public String processDeleteUserSearchForm(Model model, @RequestParam("userlist") String username) {
+		if (username != null) {
+			User user = userService.findByUsername(username);
+			model.addAttribute("userId", user.getUserId());
+			model.addAttribute("firstName", user.getFirstName());
+			model.addAttribute("lastName", user.getLastName());
+			model.addAttribute("username", user.getUsername());
+			model.addAttribute("email", user.getEmail());
+			model.addAttribute("phoneNumber", user.getPhoneNumber());
+			model.addAttribute("password", user.getPassword());
+
+			if (!model.containsAttribute("userDelete")) {
+				List<User> userlist = userService.getAllUsersExceptCurrentUser("admin");
+				model.addAttribute("userlist", userlist);
+			}
+		} else {
+			return "redirect:/admin/deleteuser";
+		}
+		return "admin/deleteuser";
+	}
+
+	@PostMapping("/deleteuser/submit")
+	public String processDeleteUserSubmitForm(@ModelAttribute("userDelete") User user) {
+		userService.deleteUser(user);
+		return "redirect:/deleteuser?action=Success";
+	}
+
 
 	@GetMapping("/activitylog")
 	public String activitylog(HttpSession session, Model model) {

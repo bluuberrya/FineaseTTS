@@ -26,6 +26,8 @@ public interface UserService {
 
     User updateUser(User updatedUser);
 
+    User deleteUser(User user);
+
     User saveUser(User user);
 
     List<User> findUserList();
