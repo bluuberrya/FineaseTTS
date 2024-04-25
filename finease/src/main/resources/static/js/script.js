@@ -1,4 +1,32 @@
 document.addEventListener("DOMContentLoaded", function () {
+    var headerType;
+    var headerContainerId;
+
+    // Determine header type based on the existence of element with id "main-header-container", "user-header-container", or "admin-header-container"
+    if (document.getElementById("main-header-container")) {
+        headerType = 'main';
+        headerContainerId = 'main-header-container';
+    } else if (document.getElementById("user-header-container")) {
+        headerType = 'user';
+        headerContainerId = 'user-header-container';
+    } else if (document.getElementById("admin-header-container")) {
+        headerType = 'admin';
+        headerContainerId = 'admin-header-container';
+    } else {
+        console.log("Header container not found.");
+        return; // Stop execution if header container is not found
+    }
+
+    // Fetch the corresponding header based on the determined header type
+    fetch(headerType + 'header')
+        .then(response => response.text())
+        .then(html => {
+            document.getElementById(headerContainerId).innerHTML = html;
+            highlightCurrentPage();
+        });
+});
+
+document.addEventListener("DOMContentLoaded", function () {
     // get fetch accessibility widget
     fetch('accesswidget')
         .then(response => response.text())
@@ -8,6 +36,20 @@ document.addEventListener("DOMContentLoaded", function () {
             initializeTTS();
         });
 });
+
+function highlightCurrentPage() {
+    var currentUrl = window.location.href;
+    var navBarLinks = document.querySelectorAll('.navbar-nav .nav-link');
+
+    navBarLinks.forEach(function (navLink) {
+        var href = navLink.getAttribute('href');
+
+        if (currentUrl.endsWith(href)) {
+            navLink.parentNode.classList.add('active');
+            navLink.innerHTML += '<span class="sr-only">(current)</span>';
+        }
+    });
+}
 
 function initializeTTS() {
     const voiceList = document.getElementById("voiceList"),
@@ -65,7 +107,13 @@ function initializeTTS() {
                 switch (event.key) {
                     case "z":
                         if (!synth.speaking) {
-                            announceCursorPosition();
+                            checkCursorPosition();
+                            isSpeaking = true;
+                        }
+                        break;
+                    case "x":
+                        if (!synth.speaking) {
+                            speakPageName();
                             isSpeaking = true;
                         }
                         break;
@@ -85,7 +133,7 @@ function initializeTTS() {
         });
     }
 
-     // function navigateToLink(key) {
+    // function navigateToLink(key) {
     //     let navLinks = document.querySelectorAll('.navbar-nav .nav-link');
     //     const index = parseInt(key) - 1;
     //     if (navLinks.length > index && index >= 0) {
@@ -150,7 +198,10 @@ function initializeTTS() {
             voiceList.style.display = "inline";
             localStorage.setItem("screenReaderState", "active"); // Save state in local storage
             localStorage.removeItem("IOBusy");
-            handlePageUpdate();
+            playaudio("/audio/pop.mp3");
+            // textToSpeech(`${document.title}`);
+            // speakPageName();
+            //handlePageUpdate();
         } else {
             removeHoverListenersFromElements();
             removeClickListenersFromElements();
@@ -185,14 +236,11 @@ function initializeTTS() {
     // Function to speak the current page name
     function speakPageName() {
         let pageText = "";
-        playaudio("/audio/pop.mp3");
-        setTimeout(function () {
-            pageText = `You are now at ${document.title} page`;
-            if (pageText !== "" && !synth.speaking) {
-                textToSpeech(pageText);
-                isSpeaking = true;
-            }
-        }, 800);
+        pageText = `You are now at ${document.title} page`;
+        if (pageText !== "" && !synth.speaking) {
+            textToSpeech(pageText);
+            isSpeaking = true;
+        }
     }
 
     function handlePageUpdate() {
@@ -235,7 +283,7 @@ function initializeTTS() {
                 }
             }, 800);
         } else {
-            speakPageName();
+            //speakPageName();
         }
     }
 
@@ -470,7 +518,7 @@ function initializeTTS() {
         });
     }
 
-    function announceCursorPosition() {
+    function checkCursorPosition() {
         const mouseMoveHandler = function (event) {
             const cursorX = event.clientX;
             const cursorY = event.clientY;
