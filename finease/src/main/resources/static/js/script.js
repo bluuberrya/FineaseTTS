@@ -1,32 +1,4 @@
 document.addEventListener("DOMContentLoaded", function () {
-    var headerType;
-    var headerContainerId;
-
-    // Determine header type based on the existence of element with id "main-header-container", "user-header-container", or "admin-header-container"
-    if (document.getElementById("main-header-container")) {
-        headerType = 'main';
-        headerContainerId = 'main-header-container';
-    } else if (document.getElementById("user-header-container")) {
-        headerType = 'user';
-        headerContainerId = 'user-header-container';
-    } else if (document.getElementById("admin-header-container")) {
-        headerType = 'admin';
-        headerContainerId = 'admin-header-container';
-    } else {
-        console.log("Header container not found.");
-        return; // Stop execution if header container is not found
-    }
-
-    // Fetch the corresponding header based on the determined header type
-    fetch(headerType + 'header')
-        .then(response => response.text())
-        .then(html => {
-            document.getElementById(headerContainerId).innerHTML = html;
-            highlightCurrentPage();
-        });
-});
-
-document.addEventListener("DOMContentLoaded", function () {
     // get fetch accessibility widget
     fetch('accesswidget')
         .then(response => response.text())
@@ -36,27 +8,6 @@ document.addEventListener("DOMContentLoaded", function () {
             initializeTTS();
         });
 });
-
-function highlightCurrentPage() {
-    // Get the current URL
-    var currentUrl = window.location.href;
-
-    // Get all the <a> elements in the navbar
-    var navLinks = document.querySelectorAll('.navbar-nav .nav-link');
-
-    // Loop through each <a> element
-    navLinks.forEach(function (navLink) {
-        // Get the URL of the <a> element
-        var href = navLink.getAttribute('href');
-
-        // If the current URL matches the <a> element's URL, add the 'active' class to its parent <li> element
-        if (currentUrl.endsWith(href)) {
-            navLink.parentNode.classList.add('active');
-            // Append the <span class="sr-only">(current)</span> to the <a> element
-            navLink.innerHTML += '<span class="sr-only">(current)</span>';
-        }
-    });
-}
 
 function initializeTTS() {
     const voiceList = document.getElementById("voiceList"),
@@ -69,13 +20,10 @@ function initializeTTS() {
 
     checkScreenReaderState();
 
-    // Listen for the 'voiceschanged' event before calling the 'voices()' function
     synth.addEventListener("voiceschanged", voices);
 
-    // Set the selected voice from localStorage or default to Google US English
     voiceList.value = localStorage.getItem("selectedVoice") || "Google US English";
 
-    // Update the selected voice in localStorage when the user changes it
     voiceList.addEventListener("change", function () {
         localStorage.setItem("selectedVoice", this.value);
         textToSpeech(`Selected ${this.value}`);
@@ -111,20 +59,53 @@ function initializeTTS() {
         toggleScreenReader();
     });
 
-    // // Event listener to handle pressing of the F key
-    // document.addEventListener("keydown", (event) => {
-    //     if (event.code === "KeyF") {
-    //         fKeyDownTime = Date.now(); // Record the current timestamp
-    //     }
-    // });
+    if (localStorage.getItem("screenReaderState") === "active") {
+        document.addEventListener("keydown", function (event) {
+            if (localStorage.getItem("IOBusy") !== "active") {
+                switch (event.key) {
+                    case "z":
+                        if (!synth.speaking) {
+                            announceCursorPosition();
+                            isSpeaking = true;
+                        }
+                        break;
+                    // case "`":
+                    //     readNavigationOptions();
+                    //     break;
+                    // case "1":
+                    // case "2":
+                    // case "3":
+                    // case "4":
+                    //     navigateToLink(event.key);
+                    //     break;
+                    default:
+                        break;
+                }
+            }
+        });
+    }
 
-    // // Event listener to handle release of the F key after a long press
-    // document.addEventListener("keyup", (event) => {
-    //     if (event.code === "KeyF" && fKeyDownTime !== null && Date.now() - fKeyDownTime >= 1000) {
-    //         toggleScreenReader(); // Toggle the screen reader
-    //         fKeyDownTime = null; // Reset the timestamp
+     // function navigateToLink(key) {
+    //     let navLinks = document.querySelectorAll('.navbar-nav .nav-link');
+    //     const index = parseInt(key) - 1;
+    //     if (navLinks.length > index && index >= 0) {
+    //         navLinks[index].click();
+    //     } else if (index === -1) {
+    //         window.history.back();
     //     }
-    // });
+    // }
+
+    // function readNavigationOptions() {
+    //     let optionsText = "Navigation options: ";
+    //     navLinks.forEach((link, index) => {
+    //         optionsText += `(${index + 1}) ${link.textContent} `;
+    //     });
+    //     optionsText = optionsText.slice(0, -2);
+    //     if (!document.getElementById('main-header-container' || 'user-header-container' || 'admin-header-container')) {
+    //         optionsText += ", Press 1 to go back";
+    //     }
+    //     textToSpeech(optionsText);
+    // }
 
     document.getElementById("clearStateBtn").addEventListener("click", function () {
         if (localStorage.getItem("screenReaderState") === "active") {
@@ -132,18 +113,16 @@ function initializeTTS() {
         }
         localStorage.setItem("selectedVoice", "Google US English");
         localStorage.removeItem("screenReaderState");
+        localStorage.removeItem("IOBusy");
         playaudio("/audio/munch.mp3");
         textToSpeech("Settings Reset");
     });
 
 
     function voices() {
-        // Check if synth.getVoices() is not null before iterating over it
         if (synth.getVoices() !== null) {
-            // Clear the options in the voiceList dropdown
             voiceList.innerHTML = "";
             for (let voice of synth.getVoices()) {
-                //let selected = voice.name === "Google US English" ? "selected" : "";
                 let selected = voice.name === localStorage.getItem("selectedVoice") ? "selected" : "";
                 let option = `<option value="${voice.name}" ${selected}>${voice.name} (${voice.lang})</option>`;
                 voiceList.insertAdjacentHTML("beforeend", option);
@@ -165,30 +144,41 @@ function initializeTTS() {
         if (isScreenReaderActive) {
             addHoverListenersToElements();
             addClickListenersToElements();
+            addFocusListenersToElements();
             screenReaderBtn.textContent = "Deactivate";
             speechBtn.style.display = "inline"; // Show the speech button
             voiceList.style.display = "inline";
             localStorage.setItem("screenReaderState", "active"); // Save state in local storage
-            // speakPageName();
-            handleErrorMessage();
+            localStorage.removeItem("IOBusy");
+            handlePageUpdate();
         } else {
             removeHoverListenersFromElements();
             removeClickListenersFromElements();
+            removeFocusListenersFromElements();
             screenReaderBtn.textContent = "Activate";
             speechBtn.style.display = "none"; // Hide the speech button
             voiceList.style.display = "none";
             localStorage.removeItem("screenReaderState"); // Remove state from local storage
+            localStorage.removeItem("IOBusy");
         }
     }
 
     function textToSpeech(text) {
+        console.log(text);
         let utterance = new SpeechSynthesisUtterance(text);
+
+        utterance.addEventListener('end', function () {
+            pause();
+        });
+
         for (let voice of synth.getVoices()) {
             if (voice.name === voiceList.value) {
                 utterance.voice = voice;
                 break;
             }
         }
+
+        // Speak the utterance
         synth.speak(utterance);
     }
 
@@ -198,7 +188,6 @@ function initializeTTS() {
         playaudio("/audio/pop.mp3");
         setTimeout(function () {
             pageText = `You are now at ${document.title} page`;
-
             if (pageText !== "" && !synth.speaking) {
                 textToSpeech(pageText);
                 isSpeaking = true;
@@ -206,12 +195,12 @@ function initializeTTS() {
         }, 800);
     }
 
-    function handleErrorMessage() {
-        // Check if there's an error parameter in the URL
+    function handlePageUpdate() {
         const urlParams = new URLSearchParams(window.location.search);
         const error = urlParams.get('error');
         const transaction = urlParams.get('transaction');
         const action = urlParams.get('action');
+        const pdf = urlParams.get('pdf');
 
         if (error) {
             playaudio("/audio/error.mp3");
@@ -229,164 +218,225 @@ function initializeTTS() {
                     isSpeaking = true;
                 }
             }, 800);
-        }   else if (action === "Success") {
-                playaudio("/audio/success.mp3");
-                setTimeout(function () {
-                    if (error !== "" && !synth.speaking) {
-                        textToSpeech("Action successful");
-                        isSpeaking = true;
-                    }
-                }, 800);
-            }
-            else {
-                speakPageName();
-            }
-        }
-
-        function convertDigitsToWords(number) {
-            const digitsToWords = {
-                '0': 'zero',
-                '1': 'one',
-                '2': 'two',
-                '3': 'three',
-                '4': 'four',
-                '5': 'five',
-                '6': 'six',
-                '7': 'seven',
-                '8': 'eight',
-                '9': 'nine'
-            };
-
-            // Convert each digit to its corresponding word
-            return number.toString().split('').map(digit => digitsToWords[digit]).join(' ');
-        }
-
-        function addHoverListenersToElements() {
-            let elements = document.querySelectorAll('h1, h2, h3, h4, h5, p, a, input, textarea, button, img[alt], select, label,tr, embed');
-            elements.forEach(element => {
-                element.addEventListener("mouseenter", hoverEventListener);
-                element.addEventListener("mouseleave", pause);
-            });
-        }
-
-        function addClickListenersToElements() {
-            let elements = document.querySelectorAll('a, input, textarea, button');
-            elements.forEach(element => {
-                element.addEventListener("click", clickEventListener);
-            });
-        }
-
-        function removeHoverListenersFromElements() {
-            let elements = document.querySelectorAll('h1, h2, h3, h4, h5, p, a, input, textarea, button, img[alt], select, label, tr, embed');
-            elements.forEach(element => {
-                element.removeEventListener("mouseenter", hoverEventListener);
-                element.removeEventListener("mouseleave", pause);
-            });
-        }
-
-        function removeClickListenersFromElements() {
-            let elements = document.querySelectorAll('a, input, textarea, button');
-            elements.forEach(element => {
-                element.removeEventListener("click", clickEventListener);
-            });
-        }
-
-        function clickEventListener() {
-            let itemText = this.textContent;
-            let elementType = this.tagName.toLowerCase();
-            let clickText = "";
-
-            // Determine the appropriate click text based on the element type
-            if (elementType === "a") {
-                clickText = `click ${itemText}`;
-            } else if (elementType === "textarea") {
-                clickText = `click ${itemText} text area`;
-            } else if (elementType === "input") {
-                clickText = `click ${itemText} ${this.name} input field`;
-            } else if (elementType === "button") {
-                clickText = `click ${itemText} button`;
-            } else {
-                clickText = `click ${itemText}`;
-            }
-            pause();
-            // Speak the click event if it's not empty
-            if (clickText !== "" && !synth.speaking) {
-                textToSpeech(clickText);
-                isSpeaking = true;
-            }
-        }
-
-        async function hoverEventListener() {
-            let itemText = this.textContent;
-            let elementType = this.tagName.toLowerCase();
-            let hoverText = "";
-
-            if (elementType === "tr") {
-                let rowCells = this.cells;
-                let rowText = Array.from(rowCells).map(cell => cell.textContent.trim()).join(', ');
-                hoverText = `Row details: ${rowText}`;
-
-            } else {
-                if (elementType === "img") {
-                    hoverText = this.alt;
-                } else if (elementType === "textarea") {
-                    hoverText = `${itemText} text area`;
-                } else if (elementType === "input") {
-                    if (this.readOnly) {
-                        hoverText = `${this.name}, ${this.value}`;
-                    } else {
-                        hoverText = `${itemText} ${this.name} input field`;
-                    }
-                } else if (elementType === "button") {
-                    hoverText = `${itemText} button`;
-                } else if (elementType === "select") {
-                    let options = Array.from(this.options).map(option => option.text).join(", ");
-                    hoverText = `${this.name}, currently selected${this.value}. The available options are ${options}`;
-                } else if (elementType === "embed") {
-                    hoverText = `reading pdf`;
-                } else {
-                    hoverText = `${itemText}`;
-                }
-            }
-
-            if (hoverText.includes("Account Number:")) {
-                let digits = hoverText.match(/\d+/g).join("");
-                hoverText = hoverText.replace(/\d+/g, convertDigitsToWords(digits));
-            }
-
-            if (hoverText !== "" && !synth.speaking) {
-                textToSpeech(hoverText);
-                isSpeaking = true;
-                if (elementType = "embed") {
-                    const pdfLink = `${this.src}`.replace("http://localhost:8080/", "");
-                    displayPDF(pdfLink);
-                }
-            }
-        }
-
-
-        function pause() {
-            if (!isSpeaking) {
-                let hoveredText = window.getSelection().toString().trim();
-                if (hoveredText !== "") {
-                    textToSpeech(hoveredText);
+        } else if (action === "Success") {
+            playaudio("/audio/success.mp3");
+            setTimeout(function () {
+                if (error !== "" && !synth.speaking) {
+                    textToSpeech("Action successful");
                     isSpeaking = true;
                 }
+            }, 800);
+        } else if (pdf === "True") {
+            playaudio("/audio/success.mp3");
+            setTimeout(function () {
+                if (error !== "" && !synth.speaking) {
+                    textToSpeech("PDF is now open below");
+                    isSpeaking = true;
+                }
+            }, 800);
+        } else {
+            speakPageName();
+        }
+    }
+
+    function convertDigitsToWords(number) {
+        const digitsToWords = {
+            '0': 'zero',
+            '1': 'one',
+            '2': 'two',
+            '3': 'three',
+            '4': 'four',
+            '5': 'five',
+            '6': 'six',
+            '7': 'seven',
+            '8': 'eight',
+            '9': 'nine'
+        };
+        return number.toString().split('').map(digit => digitsToWords[digit]).join(' ');
+    }
+
+    function addHoverListenersToElements() {
+        let elements = document.querySelectorAll('h1, h2, h3, h4, h5, p, a, input, textarea, button, img[alt], select, label,tr, embed');
+        elements.forEach(element => {
+            element.addEventListener("mouseenter", hoverEventListener);
+            element.addEventListener("mouseleave", pause);
+        });
+    }
+
+    function removeHoverListenersFromElements() {
+        let elements = document.querySelectorAll('h1, h2, h3, h4, h5, p, a, input, textarea, button, img[alt], select, label, tr, embed');
+        elements.forEach(element => {
+            element.removeEventListener("mouseenter", hoverEventListener);
+            element.removeEventListener("mouseleave", pause);
+        });
+    }
+
+    function addClickListenersToElements() {
+        let elements = document.querySelectorAll('a, input, textarea, button');
+        elements.forEach(element => {
+            element.addEventListener("click", clickEventListener);
+        });
+    }
+
+    function removeClickListenersFromElements() {
+        let elements = document.querySelectorAll('a, input, textarea, button');
+        elements.forEach(element => {
+            element.removeEventListener("click", clickEventListener);
+        });
+    }
+
+    function addFocusListenersToElements() {
+        let elements = document.querySelectorAll('a, input, textarea, button');
+        elements.forEach(element => {
+            element.addEventListener("focus", focusEventListener);
+        });
+    }
+
+    function removeFocusListenersFromElements() {
+        let elements = document.querySelectorAll('a, input, textarea, button');
+        elements.forEach(element => {
+            element.removeEventListener("click", clickEventListener);
+            element.removeEventListener("focus", focusEventListener);
+        });
+        localStorage.removeItem("IOBusy");
+    }
+
+    function clickEventListener() {
+        const itemText = this.textContent;
+        const elementType = this.tagName.toLowerCase();
+        let clickText = `click ${itemText}`;
+
+        localStorage.setItem("IOBusy", "active");
+
+        switch (elementType) {
+            case "textarea":
+                clickText = `click ${itemText} text area`;
+                break;
+            case "input":
+                clickText = `click ${itemText} ${this.name || "input"} field`;
+                break;
+            case "button":
+                clickText = `click ${itemText} button`;
+                break;
+        }
+        pause();
+
+        if (clickText !== "" && !synth.speaking) {
+            textToSpeech(clickText);
+            isSpeaking = true;
+        }
+    }
+
+    function focusEventListener() {
+        const itemText = this.textContent;
+        const elementType = this.tagName.toLowerCase();
+        let focusText = "";
+
+        switch (elementType) {
+            case "a":
+                focusText = `${itemText} link`;
+                break;
+            case "textarea":
+                focusText = `${itemText} text area`;
+                localStorage.setItem("IOBusy", "active");
+                break;
+            case "input":
+                focusText = `${itemText} ${this.name || "input"} field`;
+                localStorage.setItem("IOBusy", "active");
+                break;
+            case "button":
+                focusText = `${itemText} button`;
+                break;
+            default:
+                focusText = `${itemText}`;
+                break;
+        }
+
+        if (focusText !== "" && !synth.speaking) {
+            textToSpeech(focusText);
+            isSpeaking = true;
+        }
+    }
+
+    async function hoverEventListener() {
+        let itemText = this.textContent;
+        let elementType = this.tagName.toLowerCase();
+        let hoverText = "";
+
+        if (elementType === "tr") {
+            let rowCells = this.cells;
+            let rowText = Array.from(rowCells).map(cell => cell.textContent.trim()).join(', ');
+            hoverText = `Row details: ${rowText}`;
+        } else {
+            if (elementType === "img") {
+                hoverText = this.alt;
+            } else if (elementType === "textarea") {
+                hoverText = `${itemText} text area`;
+            } else if (elementType === "input") {
+                if (this.readOnly) {
+                    hoverText = `${this.name}, ${this.value}`;
+                } else {
+                    hoverText = `${itemText} ${this.name} input field`;
+                }
+            } else if (elementType === "button") {
+                hoverText = `${itemText} button`;
+            } else if (elementType === "select") {
+                let options = Array.from(this.options).map(option => option.text).join(", ");
+                hoverText = `${this.name}, currently selected${this.value}. The available options are ${options}`;
+            } else if (elementType === "embed") {
+                hoverText = "pdf";
             } else {
-                synth.cancel();
-                isSpeaking = false;
+                hoverText = `${itemText}`;
             }
         }
-
-        function playaudio(audioPath) {
-            var sound = new Audio(audioPath);
-            sound.volume = 0.8;
-            sound.play();
+        if (hoverText.includes("Account Number:")) {
+            let digits = hoverText.match(/\d+/g).join("");
+            hoverText = hoverText.replace(/\d+/g, convertDigitsToWords(digits));
         }
+        pause();
+        if (hoverText !== "pdf" && hoverText !== "" && !synth.speaking) {
+            textToSpeech(hoverText);
+            isSpeaking = true;
+        } else if (hoverText === "pdf") {
+            const pdfLink = this.getAttribute('src').replace("http://localhost:8080/", "");
+            displayPDF(pdfLink);
+            isSpeaking = true;
+        }
+    }
 
-        // Modify the displayPDF function to return a promise
-        function displayPDF(pdfLink) {
-            return new Promise((resolve, reject) => {
+    function pause() {
+        if (!isSpeaking) {
+            let hoveredText = window.getSelection().toString().trim();
+            if (hoveredText !== "") {
+                textToSpeech(hoveredText);
+                isSpeaking = true;
+            }
+        } else {
+            synth.cancel();
+            isSpeaking = false;
+        }
+    }
+
+    function playaudio(audioPath) {
+        var sound = new Audio(audioPath);
+        sound.volume = 0.8;
+        sound.play();
+    }
+
+    function displayPDF(pdfLink) {
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.worker.min.js';
+        return new Promise((resolve, reject) => {
+            if (pdfLink === "/pdf/finease.pdf") {
+                textToSpeech("no transaction pdf showing");
+            } else {
+                const pdfName = decodeURIComponent(pdfLink.substring(pdfLink.lastIndexOf('/') + 1))
+                    .replace(/-/g, ' ')
+                    .replace(/pdf/g, ' ')
+                    .replace(/\\/g, ' ')
+                    .replace(/\./g, ' ')
+                    .trim();
+                textToSpeech("reading " + pdfName + " pdf");
+
                 fetch(pdfLink)
                     .then(response => response.blob())
                     .then(blob => {
@@ -400,7 +450,7 @@ function initializeTTS() {
                                     pdf.getPage(pageNum).then(page => {
                                         page.getTextContent().then(pageText => {
                                             pageText.items.forEach(item => {
-                                                text += item.str + " ";
+                                                text += item.str.replace(/-/g, "") + " "; // Replace "-" with an empty string
                                             });
                                             if (pageNum === pdf.numPages) {
                                                 textToSpeech(text); // Resolve the promise with the extracted text
@@ -416,8 +466,41 @@ function initializeTTS() {
                         console.error('Error fetching PDF:', error);
                         reject(error); // Reject the promise if there's an error
                     });
-            });
-        }
-
-
+            }
+        });
     }
+
+    function announceCursorPosition() {
+        const mouseMoveHandler = function (event) {
+            const cursorX = event.clientX;
+            const cursorY = event.clientY;
+            const windowWidth = window.innerWidth || document.documentElement.clientWidth;
+            const windowHeight = window.innerHeight || document.documentElement.clientHeight;
+
+            let sectionX = "";
+            if (cursorX < windowWidth / 3) {
+                sectionX = "Left ";
+            } else if (cursorX < (windowWidth / 3) * 2) {
+                sectionX = "Center ";
+            } else {
+                sectionX = "Right ";
+            }
+
+            let sectionY = "";
+            if (cursorY < windowHeight / 3) {
+                sectionY = "Top ";
+            } else if (cursorY < (windowHeight / 3) * 2) {
+                sectionY = "Center ";
+            } else {
+                sectionY = "Bottom ";
+            }
+            if (sectionX === "Center " && sectionY === "Center ") {
+                textToSpeech("Cursor is currently at Center section.");
+            } else {
+                textToSpeech("Cursor is currently at " + sectionY + sectionX + "section.");
+            }
+            document.removeEventListener("mousemove", mouseMoveHandler);
+        };
+        document.addEventListener("mousemove", mouseMoveHandler);
+    }
+}

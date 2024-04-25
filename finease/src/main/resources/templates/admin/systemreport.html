@@ -11,7 +11,7 @@
     <meta name="keywords" content />
     <meta name="description" content />
     <meta name="author" content />
-    <link rel="shortcut icon" href="images/favicon.png" type>
+    <link rel="shortcut icon" href="images/fineaselogo.png" type>
 
     <title> System Report </title>
 
@@ -67,6 +67,7 @@
                                 <p>Number of savings transactions: <span th:text="${numberOfSavingsTransactions}"></span></p>
                                 <br />
                                 <h5 class="card-title">Transaction</h5>
+                                <p>Total transactions: <span th:text="${totalTransactions}"></span></p>
                                 <p>Number of deposits: <span th:text="${numberOfDeposits}"></span></p>
                                 <p>Number of withdrawals: <span th:text="${numberOfWithdrawals}"></span></p>
                                 <p>Number of transfers: <span th:text="${numberOfTransfers}"></span></p>
@@ -81,6 +82,7 @@
 
     <div id="accessibility-widget"></div>
     <script src="/js/script.js"></script>
+    <script src="/js/page.js"></script>
 </body>
 
 </html>

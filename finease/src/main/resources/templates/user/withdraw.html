@@ -11,7 +11,7 @@
   <meta name="keywords" content />
   <meta name="description" content />
   <meta name="author" content />
-  <link rel="shortcut icon" href="images/favicon.png" type>
+  <link rel="shortcut icon" href="images/fineaselogo.png" type>
 
   <title> Withdraw Funds </title>
 
@@ -55,22 +55,27 @@
     <div class="container">
       <div class="row">
         <div class="col-md-8 mx-auto">
+          <a href="#" onclick="history.back();">
+            <i class="fa fa-chevron-left fa-2x" aria-hidden="true" style="margin-bottom: 20px;">
+              <span class="sr-only">Back Button</span>
+            </i>
+          </a>
           <div class="card">
             <div class="card-body">
               <h5 class="card-title">Withdraw Funds</h5>
               <form action="/withdraw" method="POST">
                 <div class="form-group">
                   <label for="accountnumber">Bank Account</label>
-                    <select class="form-control" th:value="${accountType}" name="bankAccount" id="accountType"
-                            required="required">
-                        <option selected="selected">Current</option>
-                        <option>Savings</option>
-                    </select>
+                  <select class="form-control" th:value="${accountType}" name="bankAccount" id="accountType"
+                    required="required">
+                    <option selected="selected">Current</option>
+                    <option>Savings</option>
+                  </select>
                 </div>
                 <div class="form-group">
                   <label for="withdrawAmount">Amount to Withdraw (RM)</label>
-                  <input th:value="${amount}" type="number" id="withdrawAmount" name="withdrawAmount" class="form-control"
-                    placeholder="Enter amount" required>
+                  <input th:value="${amount}" type="number" id="withdrawAmount" name="withdrawAmount"
+                    class="form-control" placeholder="Enter amount" required>
                 </div>
                 <button type="submit" class="btn btn-primary">Withdraw</button>
               </form>
@@ -84,6 +89,7 @@
 
   <div id="accessibility-widget"></div>
   <script src="/js/script.js"></script>
+  <script src="/js/page.js"></script>
 
 </body>
 

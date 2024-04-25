@@ -71,12 +71,6 @@ public class IndexController {
 		return "main/service";
 	}
 
-	@GetMapping("/why")
-	public String why() {
-
-		return "main/why";
-	}
-
 	@GetMapping("/team")
 	public String team() {
 
@@ -84,7 +78,6 @@ public class IndexController {
 	}
 
 	// login and register
-
 	@GetMapping("/login")
 	public String showLoginForm() {
 		return "user/login";
@@ -265,6 +258,7 @@ public class IndexController {
 
 			model.addAttribute("currentTransactions", currentTransactions);
 			model.addAttribute("savingsTransactions", savingsTransactions);
+			//model.addAttribute("savingsTransactions", savingsTransactions);
 
 			return "user/history";
 		} else {
@@ -447,6 +441,7 @@ public class IndexController {
 		int numberOfSavingsAccounts = accountService.getTotalNumberOfSavingsAccounts();
 		int numberOfCurrentTransactions = transactionService.getTotalNumberOfCurrentTransactions();
 		int numberOfSavingsTransactions = transactionService.getTotalNumberOfSavingsTransactions();
+		int totalTransactions = numberOfCurrentTransactions + numberOfSavingsTransactions;
 		int numberOfDeposits = transactionService.getTotalNumberOfDeposits();
 		int numberOfWithdrawals = transactionService.getTotalNumberOfDWithdraws();
 		int numberOfTransfers = transactionService.getTotalNumberOfTransfers();
@@ -456,6 +451,7 @@ public class IndexController {
 		model.addAttribute("numberOfSavingsAccounts", numberOfSavingsAccounts);
 		model.addAttribute("numberOfCurrentTransactions", numberOfCurrentTransactions);
 		model.addAttribute("numberOfSavingsTransactions", numberOfSavingsTransactions);
+		model.addAttribute("totalTransactions", totalTransactions);
 		model.addAttribute("numberOfDeposits", numberOfDeposits);
 		model.addAttribute("numberOfWithdrawals", numberOfWithdrawals);
 		model.addAttribute("numberOfTransfers", numberOfTransfers);
