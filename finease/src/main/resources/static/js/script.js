@@ -101,31 +101,45 @@ function initializeTTS() {
         toggleScreenReader();
     });
 
+    if (localStorage.getItem("screenReaderState") !== "active") {
+        document.addEventListener("keydown", function (event) {
+            if (event.key === "Shift") {
+                toggleScreenReader();
+            }
+        });
+    }
+
     if (localStorage.getItem("screenReaderState") === "active") {
         document.addEventListener("keydown", function (event) {
-            if (localStorage.getItem("IOBusy") !== "active") {
+            if (localStorage.getItem("IOBusy") !== "active" && !synth.speaking) {
                 switch (event.key) {
                     case "z":
-                        if (!synth.speaking) {
-                            checkCursorPosition();
-                            isSpeaking = true;
-                        }
-                        break;
+                        playaudio("/audio/toggle_on.mp3");
+                        pause();
                     case "x":
-                        if (!synth.speaking) {
-                            speakPageName();
-                            isSpeaking = true;
-                        }
+                        checkCursorPosition();
+                        isSpeaking = true;
                         break;
-                    // case "`":
-                    //     readNavigationOptions();
-                    //     break;
-                    // case "1":
-                    // case "2":
-                    // case "3":
-                    // case "4":
-                    //     navigateToLink(event.key);
-                    //     break;
+                    case "c":
+                        speakPageName();
+                        isSpeaking = true;
+                        break;
+                    case " ":
+                        speakPageContent();
+                        break;
+                    case "v":
+                        speakPageStructure();
+                        break;
+                    case "`": 
+                        readNavigationOptions();
+                        break;
+                    case "1": 
+                    case "2":
+                    case "3":
+                    case "4":
+                    case "5":
+                        navigateToLink(event.key);
+                        break;
                     default:
                         break;
                 }
@@ -133,27 +147,100 @@ function initializeTTS() {
         });
     }
 
-    // function navigateToLink(key) {
-    //     let navLinks = document.querySelectorAll('.navbar-nav .nav-link');
-    //     const index = parseInt(key) - 1;
-    //     if (navLinks.length > index && index >= 0) {
-    //         navLinks[index].click();
-    //     } else if (index === -1) {
-    //         window.history.back();
-    //     }
-    // }
+    function speakPageContent() {
+        const metaDescription = document.querySelector('meta[name="description"]');
+        const descriptionContent = metaDescription ? metaDescription.getAttribute('content') : '';
+        textToSpeech(descriptionContent);
+    }
+    
+    function speakPageStructure() {
+        let pageStructure = generatePageStructure();
+        textToSpeech(pageStructure);
+    }
+    
+    function generatePageStructure() {
+        let pageStructure = "The page structure is:\n";
+        let navbarElements = Array.from(document.querySelectorAll('.navbar-nav .nav-link')).map(link => link.textContent.trim());
+        let contentElements = [];
+        let accessibilityWidgetElements = [];
+        let elements = document.querySelectorAll('select, input, button, a, .fa-chevron-left');
+    
+        elements.forEach(element => {
+            let tagName = element.tagName.toLowerCase();
+            let textContent = element.textContent.trim();
+            let name = element.getAttribute('name');
+    
+            if (tagName === 'select') {
+                if (element.id === 'voiceList') {
+                    accessibilityWidgetElements.push("voice selection");
+                } else {
+                    if (textContent !== "") {
+                        contentElements.push(textContent + " (select)");
+                    }
+                }
+            } else if (tagName === 'input') {
+                contentElements.push(name + " (input)");
+            } else if (tagName === 'button') {
+                if (!element.closest('#accessibility-widget')) {
+                    if (textContent !== "") {
+                        contentElements.push(textContent + " (button)");
+                    }
+                } else {
+                    if (textContent !== "") {
+                        accessibilityWidgetElements.push(textContent + " (button)");
+                    }
+                }
+            } else if (tagName === 'a') {
+                if (!element.closest('.navbar-nav') && !element.closest('#accessibility-widget')) {
+                    if (textContent !== "") {
+                        contentElements.push(textContent + " (link)");
+                    }
+                } else if (element.closest('#accessibility-widget')) {
+                    if (textContent !== "") {
+                        accessibilityWidgetElements.push(textContent + " (link)");
+                    }
+                }
+            }
+        });
 
-    // function readNavigationOptions() {
-    //     let optionsText = "Navigation options: ";
-    //     navLinks.forEach((link, index) => {
-    //         optionsText += `(${index + 1}) ${link.textContent} `;
-    //     });
-    //     optionsText = optionsText.slice(0, -2);
-    //     if (!document.getElementById('main-header-container' || 'user-header-container' || 'admin-header-container')) {
-    //         optionsText += ", Press 1 to go back";
-    //     }
-    //     textToSpeech(optionsText);
-    // }
+        if (navbarElements.length > 0) {
+            pageStructure += "Top navigation bar consists of: " + navbarElements.join(". ") + ".\n";
+        }
+
+        if (contentElements.length > 0) {
+            pageStructure += "Center content section consists of: " + contentElements.join(". ") + ".\n";
+        }
+
+        if (accessibilityWidgetElements.length > 0) {
+            pageStructure += "Bottom left Accessibility widget consists of: " + accessibilityWidgetElements.join(". ") + ".\n";
+        }
+    
+        return pageStructure;
+    }    
+    
+
+    function navigateToLink(key) {
+        let navLinks = document.querySelectorAll('.navbar-nav .nav-link');
+        const index = parseInt(key);
+        if (index === 1) {
+            window.history.back(); // Go back in browser history
+        } else {
+            const linkIndex = index - 2; // Adjust for "1" going back and "2" being the first link
+            if (navLinks.length > linkIndex && linkIndex >= 0) {
+                navLinks[linkIndex].click();
+            }
+        }
+    }    
+
+    function readNavigationOptions() {
+        let optionsText = "Navigation options: ";
+        let navLinks = document.querySelectorAll('.navbar-nav .nav-link');
+        navLinks.forEach((link, index) => {
+            optionsText += `(${index + 2}) ${link.textContent} `;
+        });
+        optionsText += "(1) Go back. ";
+        textToSpeech(optionsText);
+    }       
 
     document.getElementById("clearStateBtn").addEventListener("click", function () {
         if (localStorage.getItem("screenReaderState") === "active") {
@@ -199,9 +286,7 @@ function initializeTTS() {
             localStorage.setItem("screenReaderState", "active"); // Save state in local storage
             localStorage.removeItem("IOBusy");
             playaudio("/audio/pop.mp3");
-            // textToSpeech(`${document.title}`);
-            // speakPageName();
-            //handlePageUpdate();
+            handlePageUpdate();
         } else {
             removeHoverListenersFromElements();
             removeClickListenersFromElements();
@@ -217,10 +302,6 @@ function initializeTTS() {
     function textToSpeech(text) {
         console.log(text);
         let utterance = new SpeechSynthesisUtterance(text);
-
-        utterance.addEventListener('end', function () {
-            pause();
-        });
 
         for (let voice of synth.getVoices()) {
             if (voice.name === voiceList.value) {
@@ -283,7 +364,7 @@ function initializeTTS() {
                 }
             }, 800);
         } else {
-            //speakPageName();
+
         }
     }
 
