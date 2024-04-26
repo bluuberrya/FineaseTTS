@@ -73,14 +73,13 @@ function initializeTTS() {
 
     // Function to handle mouseover event on screen reader button
     screenReaderBtn.addEventListener("mouseover", () => {
-        let hoverText = isScreenReaderActive ? "Click to Deactivate Screen Reader" : "Click to Activate Screen Reader";
+        let hoverText = isScreenReaderActive ? "Click to Deactivate Screen Reader" : "Click or Press Shift to Activate Screen Reader";
         textToSpeech(hoverText);
     });
 
     speechBtn.addEventListener("click", () => {
         playaudio("/audio/toggle_on.mp3");
         pause();
-
     });
 
     // State
@@ -101,13 +100,11 @@ function initializeTTS() {
         toggleScreenReader();
     });
 
-    if (localStorage.getItem("screenReaderState") !== "active") {
-        document.addEventListener("keydown", function (event) {
-            if (event.key === "Shift") {
-                toggleScreenReader();
-            }
-        });
-    }
+    document.addEventListener("keydown", function (event) {
+        if (event.key === "Shift" && localStorage.getItem("IOBusy") !== "active") {
+            toggleScreenReader();
+        }
+    });
 
     if (localStorage.getItem("screenReaderState") === "active") {
         document.addEventListener("keydown", function (event) {
@@ -115,25 +112,24 @@ function initializeTTS() {
                 switch (event.key) {
                     case "z":
                         playaudio("/audio/toggle_on.mp3");
+                        textToSpeech("pause");
                         pause();
+                        break;
                     case "x":
                         checkCursorPosition();
                         isSpeaking = true;
                         break;
                     case "c":
-                        speakPageName();
-                        isSpeaking = true;
-                        break;
-                    case " ":
-                        speakPageContent();
-                        break;
-                    case "v":
                         speakPageStructure();
                         break;
-                    case "`": 
+                    case " ":
+                        event.preventDefault();
+                        speakPageContent();
+                        break;
+                    case "`":
                         readNavigationOptions();
                         break;
-                    case "1": 
+                    case "1":
                     case "2":
                     case "3":
                     case "4":
@@ -152,24 +148,24 @@ function initializeTTS() {
         const descriptionContent = metaDescription ? metaDescription.getAttribute('content') : '';
         textToSpeech(descriptionContent);
     }
-    
+
     function speakPageStructure() {
         let pageStructure = generatePageStructure();
         textToSpeech(pageStructure);
     }
-    
+
     function generatePageStructure() {
         let pageStructure = "The page structure is:\n";
         let navbarElements = Array.from(document.querySelectorAll('.navbar-nav .nav-link')).map(link => link.textContent.trim());
         let contentElements = [];
         let accessibilityWidgetElements = [];
         let elements = document.querySelectorAll('select, input, button, a, .fa-chevron-left');
-    
+
         elements.forEach(element => {
             let tagName = element.tagName.toLowerCase();
             let textContent = element.textContent.trim();
             let name = element.getAttribute('name');
-    
+
             if (tagName === 'select') {
                 if (element.id === 'voiceList') {
                     accessibilityWidgetElements.push("voice selection");
@@ -214,10 +210,10 @@ function initializeTTS() {
         if (accessibilityWidgetElements.length > 0) {
             pageStructure += "Bottom left Accessibility widget consists of: " + accessibilityWidgetElements.join(". ") + ".\n";
         }
-    
+
         return pageStructure;
-    }    
-    
+    }
+
 
     function navigateToLink(key) {
         let navLinks = document.querySelectorAll('.navbar-nav .nav-link');
@@ -230,17 +226,16 @@ function initializeTTS() {
                 navLinks[linkIndex].click();
             }
         }
-    }    
+    }
 
     function readNavigationOptions() {
-        let optionsText = "Navigation options: ";
+        let optionsText = "Menu options: (1) Go back.";
         let navLinks = document.querySelectorAll('.navbar-nav .nav-link');
         navLinks.forEach((link, index) => {
             optionsText += `(${index + 2}) ${link.textContent} `;
         });
-        optionsText += "(1) Go back. ";
         textToSpeech(optionsText);
-    }       
+    }
 
     document.getElementById("clearStateBtn").addEventListener("click", function () {
         if (localStorage.getItem("screenReaderState") === "active") {
@@ -280,17 +275,18 @@ function initializeTTS() {
             addHoverListenersToElements();
             addClickListenersToElements();
             addFocusListenersToElements();
+            addInputEventListener();
             screenReaderBtn.textContent = "Deactivate";
             speechBtn.style.display = "inline"; // Show the speech button
             voiceList.style.display = "inline";
             localStorage.setItem("screenReaderState", "active"); // Save state in local storage
-            localStorage.removeItem("IOBusy");
             playaudio("/audio/pop.mp3");
             handlePageUpdate();
         } else {
             removeHoverListenersFromElements();
             removeClickListenersFromElements();
             removeFocusListenersFromElements();
+            removeInputEventListener();
             screenReaderBtn.textContent = "Activate";
             speechBtn.style.display = "none"; // Hide the speech button
             voiceList.style.display = "none";
@@ -314,27 +310,34 @@ function initializeTTS() {
         synth.speak(utterance);
     }
 
-    // Function to speak the current page name
-    function speakPageName() {
-        let pageText = "";
-        pageText = `You are now at ${document.title} page`;
-        if (pageText !== "" && !synth.speaking) {
-            textToSpeech(pageText);
-            isSpeaking = true;
-        }
-    }
-
     function handlePageUpdate() {
         const urlParams = new URLSearchParams(window.location.search);
         const error = urlParams.get('error');
         const transaction = urlParams.get('transaction');
         const action = urlParams.get('action');
         const pdf = urlParams.get('pdf');
+        let errorText = "";
 
-        if (error) {
+        if (error === "UserExist") {
             playaudio("/audio/error.mp3");
             setTimeout(function () {
-                if (error !== "" && !synth.speaking) {
+                if (!synth.speaking) {
+                    textToSpeech("Username or Email address exist, please try again");
+                    isSpeaking = true;
+                }
+            }, 800);
+        } else if (error === "InsufficientBal") {
+            playaudio("/audio/error.mp3");
+            setTimeout(function () {
+                if (!synth.speaking) {
+                    textToSpeech("Insufficient Balance, please try again");
+                    isSpeaking = true;
+                }
+            }, 800);
+        } else if (error) {
+            playaudio("/audio/error.mp3");
+            setTimeout(function () {
+                if (!synth.speaking) {
                     textToSpeech("Input invalid, please try again");
                     isSpeaking = true;
                 }
@@ -427,15 +430,41 @@ function initializeTTS() {
             element.removeEventListener("click", clickEventListener);
             element.removeEventListener("focus", focusEventListener);
         });
+    }
+
+    function addInputEventListener() {
+        let elements = document.querySelectorAll('input, textarea');
+        elements.forEach(element => {
+            element.addEventListener("input", (event) => {
+                localStorage.setItem("IOBusy", "active");
+                inputEventListener(event);
+            });
+            element.addEventListener("blur", () => {
+                localStorage.removeItem("IOBusy");
+            });
+        });
+    }
+
+    function removeInputEventListener() {
+        let elements = document.querySelectorAll('input, textarea');
+        elements.forEach(element => {
+            element.removeEventListener("input", inputEventListener);
+        });
         localStorage.removeItem("IOBusy");
+    }
+
+    function inputEventListener(event) {
+        const inputContent = event.target.value;
+        if (inputContent && !synth.speaking) {
+            textToSpeech(inputContent);
+            isSpeaking = true;
+        }
     }
 
     function clickEventListener() {
         const itemText = this.textContent;
         const elementType = this.tagName.toLowerCase();
         let clickText = `click ${itemText}`;
-
-        localStorage.setItem("IOBusy", "active");
 
         switch (elementType) {
             case "textarea":
@@ -467,11 +496,9 @@ function initializeTTS() {
                 break;
             case "textarea":
                 focusText = `${itemText} text area`;
-                localStorage.setItem("IOBusy", "active");
                 break;
             case "input":
                 focusText = `${itemText} ${this.name || "input"} field`;
-                localStorage.setItem("IOBusy", "active");
                 break;
             case "button":
                 focusText = `${itemText} button`;

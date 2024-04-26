@@ -698,3 +698,23 @@ a:focus {
 .screenReader button:hover {
   text-decoration: underline;
 }
+
+.navigationBox {
+  position: fixed;
+  bottom: calc(10px + 50px);
+  left: 10px;
+  padding: 10px;
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  z-index: 9999;
+  width: 190px;
+}
+
+.navigationKeys {
+  font-size: 13px;
+}
+
+.key {
+  margin-right: 0px;
+  margin-bottom: 0px;
+}

@@ -27,4 +27,6 @@ public interface AccountService {
 
     int getTotalNumberOfCurrentAccounts();
 
+    boolean isBalanceSufficient(String accountType, double amount, User user);
+
 }

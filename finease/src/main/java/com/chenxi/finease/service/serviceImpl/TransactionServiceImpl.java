@@ -100,27 +100,26 @@ public class TransactionServiceImpl implements TransactionService {
     }
     
     public void toSomeoneElseTransfer(User transferTo, String transferFrom, String amount, CurrentAccount currentAccount, SavingsAccount savingsAccount) {
-   
         try {
             BigDecimal transferAmount = new BigDecimal(amount);
             if (transferFrom.equalsIgnoreCase("Current")) {
                 currentAccount.setAccountBalance(currentAccount.getAccountBalance().subtract(transferAmount));
                 currentAccountRepository.save(currentAccount);
-
+    
                 User transfrom = userService.findByUserId(currentAccount.getId());
                 CurrentAccount recipientCurrentAccount = transferTo.getCurrentAccount();
                 recipientCurrentAccount.setAccountBalance(recipientCurrentAccount.getAccountBalance().add(transferAmount));
                 currentAccountRepository.save(recipientCurrentAccount);
-
+    
                 Date date = new Date();
                 CurrentTransaction currentTransaction = new CurrentTransaction(date, transfrom.getUsername() + " transfer to " + transferTo.getUsername(), "Transfer", "Finished", transferAmount.doubleValue(), currentAccount.getAccountBalance(), currentAccount);
                 currentTransactionRepository.save(currentTransaction);
-
+    
                 generateCurrentReceipt(currentTransaction);
             } else if (transferFrom.equalsIgnoreCase("Savings")) {
                 savingsAccount.setAccountBalance(savingsAccount.getAccountBalance().subtract(transferAmount));
                 savingsAccountRepository.save(savingsAccount);
-
+    
                 User transfrom = userService.findByUserId(currentAccount.getId());
                 SavingsAccount recipientSavingsAccount = transferTo.getSavingsAccount();
                 recipientSavingsAccount.setAccountBalance(recipientSavingsAccount.getAccountBalance().add(transferAmount));
@@ -129,14 +128,14 @@ public class TransactionServiceImpl implements TransactionService {
                 Date date = new Date();
                 SavingsTransaction savingsTransaction = new SavingsTransaction(date, transfrom.getUsername() + " transfer to " + transferTo.getUsername(), "Transfer", "Finished", transferAmount.doubleValue(), savingsAccount.getAccountBalance(), savingsAccount);
                 savingsTransactionRepository.save(savingsTransaction);
-
+    
                 generateSavingsReceipt(savingsTransaction);
             }
         } catch (Exception e) {
             System.err.println("Error occurred during transaction: " + e.getMessage());
             e.printStackTrace();
         }
-    }
+    }    
 
 
     //PDF

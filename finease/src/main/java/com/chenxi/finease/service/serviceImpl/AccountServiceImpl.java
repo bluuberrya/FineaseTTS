@@ -138,4 +138,17 @@ public class AccountServiceImpl implements AccountService{
         return (int) currentAccountRepository.count();
     }
 
+    public boolean isBalanceSufficient(String accountType, double amount, User user) {
+        if (accountType.equalsIgnoreCase("Current")) {
+            CurrentAccount currentAccount = user.getCurrentAccount();
+            BigDecimal currentBalance = currentAccount.getAccountBalance();
+            return currentBalance.compareTo(BigDecimal.valueOf(amount)) >= 0;
+        } else if (accountType.equalsIgnoreCase("Savings")) {
+            SavingsAccount savingsAccount = user.getSavingsAccount();
+            BigDecimal savingsBalance = savingsAccount.getAccountBalance();
+            return savingsBalance.compareTo(BigDecimal.valueOf(amount)) >= 0;
+        }
+        return false;
+    }    
+
 }

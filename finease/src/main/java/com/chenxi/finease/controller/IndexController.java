@@ -53,12 +53,6 @@ public class IndexController {
 
 	}
 
-	@GetMapping("/test")
-	public String test() {
-
-		return "main/test";
-	}
-
 	@GetMapping("/about")
 	public String about() {
 
@@ -110,10 +104,14 @@ public class IndexController {
 	}
 
 	@PostMapping("/register")
-	public String registerUser(@ModelAttribute User user) {
-		System.out.println(user);
+	public String registerUser(@ModelAttribute User user, Model model) {
+		// Check if the username or email already exists
+		if (userService.checkUserExists(user.getUsername(), user.getEmail())) {
+			model.addAttribute("error", "Username already exists");
+			return "redirect:/register?error=UserExist";
+		}
 		userService.createUser(user);
-		return "redirect:/login"; // Redirect to login page after registration
+		return "redirect:/login"; // Redirect to login page after successful registration
 	}
 
 	// user
@@ -188,16 +186,18 @@ public class IndexController {
 	@PostMapping("/withdraw")
 	public String withdraw(@ModelAttribute("bankAccount") String accountType,
 			@ModelAttribute("withdrawAmount") double amount,
-			HttpSession session) {
-		// Retrieve the username from the session
+			HttpSession session,
+			Model model) {
 		String username = (String) session.getAttribute("username");
 
-		// Use the service method to fetch the user object from the database using the
-		// username
 		User user = userService.findByUsername(username);
 
 		if (user != null) {
 			try {
+				if (!accountService.isBalanceSufficient(accountType, amount, user)) {
+					return "redirect:/withdraw?error=InsufficientBal";
+				}
+
 				accountService.withdraw(accountType, amount, user);
 			} catch (DocumentException | IOException e) {
 				e.printStackTrace();
@@ -229,24 +229,29 @@ public class IndexController {
 	public String transfer(@ModelAttribute("transferFrom") String transferFrom,
 			@ModelAttribute("transferTo") String transferToUsername,
 			@ModelAttribute("transferAmount") String transferAmount,
-			HttpSession session) {
+			HttpSession session, Model model) {
 		String username = (String) session.getAttribute("username");
 		User transferTo = userService.findByUsername(transferToUsername);
-
+	
 		if (username != null) {
 			User currentUser = userService.findByUsername(username);
 			CurrentAccount currentAccount = currentUser.getCurrentAccount();
 			SavingsAccount savingsAccount = currentUser.getSavingsAccount();
-			transactionService.toSomeoneElseTransfer(transferTo, transferFrom, transferAmount, currentAccount,
-					savingsAccount);
-
+			BigDecimal transferAmt = new BigDecimal(transferAmount);
+			
+			if (("Current".equalsIgnoreCase(transferFrom) && currentAccount.getAccountBalance().compareTo(transferAmt) < 0) ||
+					("Savings".equalsIgnoreCase(transferFrom) && savingsAccount.getAccountBalance().compareTo(transferAmt) < 0)) {
+				return "redirect:/transfer?error=InsufficientBal";
+			}
+			
+			transactionService.toSomeoneElseTransfer(transferTo, transferFrom, transferAmount, currentAccount, savingsAccount);
 		} else {
 			return "redirect:/login";
 		}
-
+	
 		return "redirect:/transfer?transaction=Success";
 	}
-
+	
 	@GetMapping("/history")
 	public String showTransactionHistory(HttpSession session, Model model) {
 		// Retrieve the username from the session
@@ -258,7 +263,7 @@ public class IndexController {
 
 			model.addAttribute("currentTransactions", currentTransactions);
 			model.addAttribute("savingsTransactions", savingsTransactions);
-			//model.addAttribute("savingsTransactions", savingsTransactions);
+			// model.addAttribute("savingsTransactions", savingsTransactions);
 
 			return "user/history";
 		} else {
@@ -336,7 +341,7 @@ public class IndexController {
 		return "redirect:/adduser?action=Success";
 	}
 
-//edit user
+	// edit user
 	@GetMapping("/edituser")
 	public String editUserForm(Model model) {
 
@@ -377,7 +382,7 @@ public class IndexController {
 		return "redirect:/edituser?action=Success";
 	}
 
-//delete user
+	// delete user
 	@GetMapping("/deleteuser")
 	public String deleteUserForm(Model model) {
 		if (!model.containsAttribute("userDelete")) {
@@ -415,7 +420,6 @@ public class IndexController {
 		return "redirect:/deleteuser?action=Success";
 	}
 
-
 	@GetMapping("/activitylog")
 	public String activitylog(HttpSession session, Model model) {
 		String username = (String) session.getAttribute("username");
@@ -445,7 +449,7 @@ public class IndexController {
 		int numberOfDeposits = transactionService.getTotalNumberOfDeposits();
 		int numberOfWithdrawals = transactionService.getTotalNumberOfDWithdraws();
 		int numberOfTransfers = transactionService.getTotalNumberOfTransfers();
-	
+
 		model.addAttribute("numberOfUsers", numberOfUsers);
 		model.addAttribute("numberOfCurrentAccounts", numberOfCurrentAccounts);
 		model.addAttribute("numberOfSavingsAccounts", numberOfSavingsAccounts);
@@ -455,7 +459,7 @@ public class IndexController {
 		model.addAttribute("numberOfDeposits", numberOfDeposits);
 		model.addAttribute("numberOfWithdrawals", numberOfWithdrawals);
 		model.addAttribute("numberOfTransfers", numberOfTransfers);
-	
+
 		return "admin/systemreport";
 	}
 
