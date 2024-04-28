@@ -111,15 +111,10 @@ function initializeTTS() {
             if (localStorage.getItem("IOBusy") !== "active" && !synth.speaking) {
                 switch (event.key) {
                     case "z":
-                        playaudio("/audio/toggle_on.mp3");
-                        textToSpeech("pause");
-                        pause();
-                        break;
-                    case "x":
                         checkCursorPosition();
                         isSpeaking = true;
                         break;
-                    case "c":
+                    case "x":
                         speakPageStructure();
                         break;
                     case " ":
@@ -263,9 +258,9 @@ function initializeTTS() {
     // Function to check the screen reader state and activate it if necessary
     function checkScreenReaderState() {
         if (localStorage.getItem("screenReaderState") === "active") {
-            toggleScreenReader(); // Activate screen reader if it was active
+            toggleScreenReader();
         } else {
-            speechBtn.style.display = "none"; // Hide the speech button
+            speechBtn.style.display = "none";
         }
     }
 
@@ -277,7 +272,7 @@ function initializeTTS() {
             addFocusListenersToElements();
             addInputEventListener();
             screenReaderBtn.textContent = "Deactivate";
-            speechBtn.style.display = "inline"; // Show the speech button
+            speechBtn.style.display = "none"; // Hidespeech button
             voiceList.style.display = "inline";
             localStorage.setItem("screenReaderState", "active"); // Save state in local storage
             playaudio("/audio/pop.mp3");
@@ -288,7 +283,6 @@ function initializeTTS() {
             removeFocusListenersFromElements();
             removeInputEventListener();
             screenReaderBtn.textContent = "Activate";
-            speechBtn.style.display = "none"; // Hide the speech button
             voiceList.style.display = "none";
             localStorage.removeItem("screenReaderState"); // Remove state from local storage
             localStorage.removeItem("IOBusy");
@@ -443,15 +437,17 @@ function initializeTTS() {
     function addInputEventListener() {
         let elements = document.querySelectorAll('input, textarea');
         elements.forEach(element => {
-            element.addEventListener("input", (event) => {
-                localStorage.setItem("IOBusy", "active");
-                inputEventListener(event);
+            element.addEventListener("input", function(event) {
+                if (event.isTrusted) {
+                    localStorage.setItem("IOBusy", "active");
+                    inputEventListener(event);
+                }
             });
             element.addEventListener("blur", () => {
                 localStorage.removeItem("IOBusy");
             });
         });
-    }
+    }    
 
     function removeInputEventListener() {
         let elements = document.querySelectorAll('input, textarea');

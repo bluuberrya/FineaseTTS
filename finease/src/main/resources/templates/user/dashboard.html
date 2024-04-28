@@ -9,7 +9,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <!-- Site Metas -->
     <meta name="keywords" content />
-    <meta name="description" content="This is dashboard page. It shows the user bank account and balance. Actions such as deposit, withdraw and transfer funds can be taken here." />
+    <meta name="description"
+        content="This is dashboard page. It shows the user bank account and balance. Actions such as deposit, withdraw and transfer funds can be taken here." />
     <meta name="author" content />
     <link rel="shortcut icon" href="images/fineaselogo.png" type>
 
@@ -33,6 +34,11 @@
     <!-- responsive style -->
     <link href="css/responsive.css" rel="stylesheet" />
 
+    <style>
+        .hide {
+            display: none;
+        }
+    </style>
 </head>
 
 <body class="sub_page">
@@ -60,19 +66,31 @@
                         <div class="card-body">
                             <h5 class="card-title">Current Account</h5>
                             <div class="account-details">
-                                <p>Account Number: <span id="accountNumber" th:text="${currentAccountNumber}"></span></p>
-                                <p>Balance: RM <span th:text="${currentBalance}"></span></p>                                
+                                <p>Account Number: <span id="currentAccountNumber"
+                                        th:text="${currentAccountNumber}"></span></p>
+                                <p>Balance: RM <span id="currentBalance" class="balance hide"
+                                        th:text="${currentBalance}"></span></p>
                             </div>
                             <h5 class="card-title">Savings Account</h5>
                             <div class="account-details">
-                                <p>Account Number: <span id="accountNumber" th:text="${savingsAccountNumber}"></span></p>
-                                <p>Balance: RM <span th:text="${savingsBalance}"></span></p>
+                                <p>Account Number: <span id="savingsAccountNumber"
+                                        th:text="${savingsAccountNumber}"></span></p>
+                                <p>Balance: RM <span id="savingsBalance" class="balance hide"
+                                        th:text="${savingsBalance}"></span></p>
                             </div>
-                            <div class="action-buttons">
-                                <button class="btn btn-primary" onclick="window.location.href='deposit'">Deposit</button>
-                                <button class="btn btn-primary" onclick="window.location.href='withdraw'">Withdraw</button>
-                                <button class="btn btn-primary" onclick="window.location.href='transfer'">Transfer</button>
-                            </div>                            
+                            <div class="text-center mt-4">
+                                <button id="toggleBalanceBtn" class="btn btn-secondary">Show Balance</button>
+                            </div>
+
+                            <div class="action-buttons text-center">
+                                <button onclick="window.location.href='deposit'"
+                                    class="btn btn-primary btn-lg w-50 mb-2" id="depositbtn">Deposit</button>
+                                <button onclick="window.location.href='withdraw'"
+                                    class="btn btn-primary btn-lg w-50 mb-2" id="withdrawbtn">Withdraw</button>
+                                <button onclick="window.location.href='transfer'" class="btn btn-primary btn-lg w-50"
+                                    id="transferbtn">Transfer</button>
+                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -84,6 +102,21 @@
     <div id="accessibility-widget"></div>
     <script src="/js/script.js"></script>
     <script src="/js/page.js"></script>
+    <script>
+        document.getElementById('toggleBalanceBtn').addEventListener('click', function () {
+            var balances = document.querySelectorAll('.balance');
+            balances.forEach(function (balance) {
+                balance.classList.toggle('hide');
+            });
+
+            var buttonText = this.innerText;
+            var newText = buttonText === "Show Balance" ? "Hide Balance" : "Show Balance";
+
+            setTimeout(() => {
+                this.innerText = newText;
+            }, 150);
+        });
+    </script>
 
 </body>
 
