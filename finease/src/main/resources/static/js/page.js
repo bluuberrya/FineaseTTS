@@ -27,6 +27,18 @@ if (document.querySelector("[id^='viewPdfBtn1_']")) {
     });
 }
 
+if (document.querySelector("[id^='viewPdfBtn2_']")) {
+    document.querySelectorAll("[id^='viewPdfBtn2_']").forEach(function(button) {
+        button.addEventListener("click", function(event) {
+            event.preventDefault(); // Prevent default form submission behavior
+            const pdfUrl = this.getAttribute('data-pdf-url');
+            const pdfViewer = document.getElementById('pdf-viewer2');
+            pdfViewer.setAttribute('src', pdfUrl);
+            history.pushState({}, '', '/history?pdf=True');
+        });
+    });
+}
+
 function enableEditMode() {
     var inputs = document.querySelectorAll("input");
     inputs.forEach(function (input) {
