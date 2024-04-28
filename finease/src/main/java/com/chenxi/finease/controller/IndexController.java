@@ -216,7 +216,7 @@ public class IndexController {
 		if (username != null) {
 			List<User> otherUsers = userService.getAllUsersExceptCurrentUser(username);
 			model.addAttribute("transferTo", otherUsers);
-			model.addAttribute("transferFrom", "");
+			model.addAttribute("accountType", "");
 			model.addAttribute("transferAmount", "");
 		} else {
 			return "redirect:/login";
@@ -226,32 +226,35 @@ public class IndexController {
 	}
 
 	@PostMapping("/transfer")
-	public String transfer(@ModelAttribute("transferFrom") String transferFrom,
+	public String transfer(@ModelAttribute("accountType") String accountType,
 			@ModelAttribute("transferTo") String transferToUsername,
 			@ModelAttribute("transferAmount") String transferAmount,
 			HttpSession session, Model model) {
 		String username = (String) session.getAttribute("username");
 		User transferTo = userService.findByUsername(transferToUsername);
-	
+
 		if (username != null) {
 			User currentUser = userService.findByUsername(username);
 			CurrentAccount currentAccount = currentUser.getCurrentAccount();
 			SavingsAccount savingsAccount = currentUser.getSavingsAccount();
 			BigDecimal transferAmt = new BigDecimal(transferAmount);
-			
-			if (("Current".equalsIgnoreCase(transferFrom) && currentAccount.getAccountBalance().compareTo(transferAmt) < 0) ||
-					("Savings".equalsIgnoreCase(transferFrom) && savingsAccount.getAccountBalance().compareTo(transferAmt) < 0)) {
+
+			if (("Current".equalsIgnoreCase(accountType)
+					&& currentAccount.getAccountBalance().compareTo(transferAmt) < 0) ||
+					("Savings".equalsIgnoreCase(accountType)
+							&& savingsAccount.getAccountBalance().compareTo(transferAmt) < 0)) {
 				return "redirect:/transfer?error=InsufficientBal";
 			}
-			
-			transactionService.toSomeoneElseTransfer(transferTo, transferFrom, transferAmount, currentAccount, savingsAccount);
+
+			transactionService.toSomeoneElseTransfer(transferTo, accountType, transferAmount, currentAccount,
+					savingsAccount);
 		} else {
 			return "redirect:/login";
 		}
-	
+
 		return "redirect:/transfer?transaction=Success";
 	}
-	
+
 	@GetMapping("/history")
 	public String showTransactionHistory(HttpSession session, Model model) {
 		// Retrieve the username from the session
@@ -344,12 +347,10 @@ public class IndexController {
 	// edit user
 	@GetMapping("/edituser")
 	public String editUserForm(Model model) {
-
-		if (!model.containsAttribute("userEdit")) {
+		if (!model.containsAttribute("userFrom")) {
 			List<User> userlist = userService.getAllUsersExceptCurrentUser("admin");
 			model.addAttribute("userlist", userlist);
 		}
-
 		return "admin/edituser";
 	}
 
@@ -420,6 +421,113 @@ public class IndexController {
 		return "redirect:/deleteuser?action=Success";
 	}
 
+	@GetMapping("/mudeposit")
+	public String showMUDepositForm(Model model) {
+		if (!model.containsAttribute("userlist")) {
+			List<User> userList = userService.getAllUsersExceptCurrentUser("admin");
+			model.addAttribute("userlist", userList);
+		}
+		return "admin/mudeposit";
+	}
+
+	@PostMapping("/mudeposit")
+	public String mudeposit(@ModelAttribute("userlist") User user,
+			@ModelAttribute("bankAccount") String accountType,
+			@ModelAttribute("depositAmount") double amount,
+			HttpSession session) {
+
+		if (user != null) {
+			try {
+				accountService.deposit(accountType, amount, user);
+			} catch (DocumentException | IOException e) {
+				e.printStackTrace();
+			}
+		} else {
+			return "redirect:/login";
+		}
+
+		return "redirect:/mudeposit?transaction=Success";
+	}
+
+	@GetMapping("/muwithdraw")
+	public String showMUWithdrawForm(Model model) {
+		if (!model.containsAttribute("userlist")) {
+			List<User> userList = userService.getAllUsersExceptCurrentUser("admin");
+			model.addAttribute("userlist", userList);
+		}
+		return "admin/muwithdraw";
+	}
+
+	@PostMapping("/muwithdraw")
+	public String muwithdraw(@ModelAttribute("userlist") User user,
+			@ModelAttribute("bankAccount") String accountType,
+			@ModelAttribute("withdrawAmount") double amount,
+			HttpSession session,
+			Model model) {
+
+		if (user != null) {
+			try {
+				if (!accountService.isBalanceSufficient(accountType, amount, user)) {
+					return "redirect:/withdraw?error=InsufficientBal";
+				}
+
+				accountService.withdraw(accountType, amount, user);
+			} catch (DocumentException | IOException e) {
+				e.printStackTrace();
+			}
+		} else {
+			return "redirect:/login";
+		}
+
+		return "redirect:/muwithdraw?transaction=Success";
+	}
+
+	@GetMapping("/mutransfer")
+	public String showMUTransferForm(Model model) {
+		if (!model.containsAttribute("transferFrom")) {
+			List<User> userList = userService.getAllUsersExceptCurrentUser("admin");
+			model.addAttribute("transferFrom", userList);
+			model.addAttribute("transferTo", userList);
+		}
+
+		return "admin/mutransfer";
+	}
+
+	@PostMapping("/mutransfer")
+	public String mutransfer(@RequestParam("transferFrom") String transferFrom,
+			@RequestParam("transferTo") String transferToUsername,
+			@RequestParam("accountType") String accountType,
+			@RequestParam("transferAmount") String transferAmount,
+			HttpSession session, Model model) {
+	
+		if (transferFrom != null && !transferFrom.equals(transferToUsername)) {
+			User transferFromUser = userService.findByUsername(transferFrom);
+			CurrentAccount currentAccount = transferFromUser.getCurrentAccount();
+			SavingsAccount savingsAccount = transferFromUser.getSavingsAccount();
+			BigDecimal transferAmt = new BigDecimal(transferAmount);
+	
+			if (("Current".equalsIgnoreCase(accountType)
+					&& currentAccount.getAccountBalance().compareTo(transferAmt) < 0) ||
+					("Savings".equalsIgnoreCase(accountType)
+							&& savingsAccount.getAccountBalance().compareTo(transferAmt) < 0)) {
+				return "redirect:/mutransfer?error=InsufficientBal";
+			}
+			User transferTo = userService.findByUsername(transferToUsername);
+	
+			transactionService.toSomeoneElseTransfer(transferTo, accountType, transferAmount, currentAccount,
+					savingsAccount);
+	
+			System.out.println("Transfer From: " + transferFromUser.getUsername());
+			System.out.println("Transfer To: " + transferTo.getUsername());
+			System.out.println("Account Type: " + accountType);
+			System.out.println("Transfer Amount: " + transferAmount);
+		} else {
+			return "redirect:/mutransfer?transaction=Failed";
+		}
+		return "redirect:/mutransfer?transaction=Success";
+	}
+	
+
 	@GetMapping("/activitylog")
 	public String activitylog(HttpSession session, Model model) {
 		String username = (String) session.getAttribute("username");
@@ -487,4 +595,5 @@ public class IndexController {
 
 		return "common/accesswidget";
 	}
+
 }

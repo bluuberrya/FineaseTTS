@@ -350,6 +350,14 @@ function initializeTTS() {
                     isSpeaking = true;
                 }
             }, 800);
+        } else if (transaction === "Failed") {
+            playaudio("/audio/error.mp3");
+            setTimeout(function () {
+                if (error !== "" && !synth.speaking) {
+                    textToSpeech("Transation failed, please try again.");
+                    isSpeaking = true;
+                }
+            }, 800);
         } else if (action === "Success") {
             playaudio("/audio/success.mp3");
             setTimeout(function () {

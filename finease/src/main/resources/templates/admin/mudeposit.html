@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <!-- Basic -->
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <!-- Mobile Metas -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <!-- Site Metas -->
+  <meta name="keywords" content />
+  <meta name="description" content="This is admin's deposit funds page. Admin may deposit funds into selected account." />
+  <meta name="author" content />
+  <link rel="shortcut icon" href="images/fineaselogo.png" type>
+
+  <title> Deposit Funds | Admin </title>
+
+  <!-- bootstrap core css -->
+  <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+
+  <!-- fonts style -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+
+  <!--owl slider stylesheet -->
+  <link rel="stylesheet" type="text/css"
+    href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
+
+  <!-- font awesome style -->
+  <link href="css/font-awesome.min.css" rel="stylesheet" />
+
+  <!-- Custom styles for this template -->
+  <link href="css/style.css" rel="stylesheet" />
+  <!-- responsive style -->
+  <link href="css/responsive.css" rel="stylesheet" />
+
+</head>
+
+<body class="sub_page">
+
+  <div class="hero_area">
+
+    <div class="hero_bg_box">
+      <div class="bg_img_box">
+        <img src="images/hero-bg.png" alt>
+      </div>
+    </div>
+
+    <!-- header section strats -->
+    <div id="admin-header-container"></div>
+    <!-- end header section -->
+  </div>
+
+  <!-- Deposit section -->
+  <section class="transfer_section layout_padding">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-8 mx-auto">
+          <a href="#" onclick="history.back();">
+            <i class="fa fa-chevron-left fa-2x" aria-hidden="true" style="margin-bottom: 20px;">
+              <span class="sr-only">Back</span>
+            </i>
+          </a>
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Deposit Funds</h5>
+              <form action="/mudeposit" method="POST">
+                <div class="form-group">
+                  <label for="userlist">Select User ID</label>
+                  <select class="form-select custom-width" id="userlist" name="userlist">
+                    <option disabled="disabled" selected="selected"> -- </option>
+                    <option th:each="user : ${userlist}" th:value="${user.userId}" th:text="${user.userId}">
+                    </option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="accountnumber">Bank Account</label>
+                    <select class="form-control" th:value="${accountType}" name="bankAccount" id="accountType"
+                            required="required">
+                        <option selected="selected">Current</option>
+                        <option>Savings</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                  <label for="depositAmount">Amount to Deposit (RM)</label>
+                  <input th:value="${amount}" type="number" id="depositAmount" name="depositAmount" class="form-control"
+                    placeholder="Enter amount" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Deposit</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- End Deposit section -->
+
+  <div id="accessibility-widget"></div>
+  <script src="/js/script.js"></script>
+  <script src="/js/page.js"></script>
+
+</body>
+
+</html>
