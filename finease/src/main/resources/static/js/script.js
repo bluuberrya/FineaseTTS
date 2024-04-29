@@ -168,6 +168,17 @@ function initializeTTS() {
         let accessibilityWidgetElements = [];
         let elements = document.querySelectorAll('select, input, button, a, .fa-chevron-left');
 
+        function isScrollable() {
+            return document.body.scrollHeight > document.documentElement.clientHeight ||
+                document.documentElement.scrollHeight > document.documentElement.clientHeight;
+        }
+    
+        if (isScrollable()) {
+            pageStructure += "The page is scrollable.\n";
+        } else {
+            pageStructure += "The page is not scrollable.\n";
+        }
+
         elements.forEach(element => {
             let tagName = element.tagName.toLowerCase();
             let textContent = element.textContent.trim();
@@ -215,7 +226,7 @@ function initializeTTS() {
         }
 
         if (accessibilityWidgetElements.length > 0) {
-            pageStructure += "Bottom left Accessibility widget consists of: " + accessibilityWidgetElements.join(". ") + ".\n";
+            pageStructure += "Bottom left Accessibility widget consists of: navigation guide. " + accessibilityWidgetElements.join(". ") + ".\n";
         }
 
         return pageStructure;
@@ -322,68 +333,31 @@ function initializeTTS() {
         const transaction = urlParams.get('transaction');
         const action = urlParams.get('action');
         const pdf = urlParams.get('pdf');
-        let errorText = "";
-
-        if (error === "UserExist") {
-            playaudio("/audio/error.mp3");
-            setTimeout(function () {
+        let message = "";
+    
+        const playAudioAndSpeak = (audio, text) => {
+            playaudio(audio);
+            setTimeout(() => {
                 if (!synth.speaking) {
-                    textToSpeech("Username or Email address exist, please try again");
+                    textToSpeech(text);
                     isSpeaking = true;
                 }
             }, 800);
-        } else if (error === "InsufficientBal") {
-            playaudio("/audio/error.mp3");
-            setTimeout(function () {
-                if (!synth.speaking) {
-                    textToSpeech("Insufficient Balance, please try again");
-                    isSpeaking = true;
-                }
-            }, 800);
-        } else if (error) {
-            playaudio("/audio/error.mp3");
-            setTimeout(function () {
-                if (!synth.speaking) {
-                    textToSpeech("Input invalid, please try again");
-                    isSpeaking = true;
-                }
-            }, 800);
+        };
+    
+        if (error) {
+            playAudioAndSpeak("/audio/error.mp3", "Input invalid, please try again");
         } else if (transaction === "Success") {
-            playaudio("/audio/success.mp3");
-            setTimeout(function () {
-                if (error !== "" && !synth.speaking) {
-                    textToSpeech("Transaction successful");
-                    isSpeaking = true;
-                }
-            }, 800);
+            playAudioAndSpeak("/audio/success.mp3", "Transaction successful");
         } else if (transaction === "Failed") {
-            playaudio("/audio/error.mp3");
-            setTimeout(function () {
-                if (error !== "" && !synth.speaking) {
-                    textToSpeech("Transation failed, please try again.");
-                    isSpeaking = true;
-                }
-            }, 800);
+            playAudioAndSpeak("/audio/error.mp3", "Transaction failed, please try again.");
         } else if (action === "Success") {
-            playaudio("/audio/success.mp3");
-            setTimeout(function () {
-                if (error !== "" && !synth.speaking) {
-                    textToSpeech("Action successful");
-                    isSpeaking = true;
-                }
-            }, 800);
+            playAudioAndSpeak("/audio/success.mp3", "Action successful");
         } else if (pdf === "True") {
-            playaudio("/audio/success.mp3");
-            setTimeout(function () {
-                if (error !== "" && !synth.speaking) {
-                    textToSpeech("PDF is now open below");
-                    isSpeaking = true;
-                }
-            }, 800);
-        } else {
-
+            playAudioAndSpeak("/audio/success.mp3", "PDF is now open below");
         }
     }
+    
 
     function convertDigitsToWords(number) {
         const digitsToWords = {

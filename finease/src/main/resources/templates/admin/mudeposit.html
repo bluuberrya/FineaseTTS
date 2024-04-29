@@ -66,7 +66,7 @@
               <form action="/mudeposit" method="POST">
                 <div class="form-group">
                   <label for="userlist">Select User ID</label>
-                  <select class="form-select custom-width" id="userlist" name="userlist">
+                  <select class="form-control" id="userlist" name="userlist">
                     <option disabled="disabled" selected="selected"> -- </option>
                     <option th:each="user : ${userlist}" th:value="${user.userId}" th:text="${user.userId}">
                     </option>
