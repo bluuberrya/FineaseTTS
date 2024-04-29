@@ -89,19 +89,31 @@ function initializeTTS() {
             playaudio("/audio/toggle_on.mp3");
             setTimeout(function () {
                 textToSpeech("Screen Reader Activated");
-            }, 300);
+            }, 400);
         }
-        if (isScreenReaderActive && isSpeaking) {
+        if (isScreenReaderActive && !isSpeaking) {
             playaudio("/audio/toggle_off.mp3");
             setTimeout(function () {
                 textToSpeech("Screen Reader Deactivated");
-            }, 300);
+            }, 400);
         }
         toggleScreenReader();
     });
 
     document.addEventListener("keydown", function (event) {
         if (event.key === "Shift" && localStorage.getItem("IOBusy") !== "active") {
+            if (!isScreenReaderActive && !isSpeaking) {
+                playaudio("/audio/toggle_on.mp3");
+                setTimeout(function () {
+                    textToSpeech("Screen Reader Activated");
+                }, 400);
+            }
+            if (isScreenReaderActive && !isSpeaking) {
+                playaudio("/audio/toggle_off.mp3");
+                setTimeout(function () {
+                    textToSpeech("Screen Reader Deactivated");
+                }, 400);
+            }
             toggleScreenReader();
         }
     });
