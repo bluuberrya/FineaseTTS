@@ -112,7 +112,8 @@ public class TransactionServiceImpl implements TransactionService {
                 currentAccountRepository.save(recipientCurrentAccount);
     
                 Date date = new Date();
-                CurrentTransaction currentTransaction = new CurrentTransaction(date, transfrom.getUsername() + " transfer to " + transferTo.getUsername(), "Transfer", "Finished", transferAmount.doubleValue(), currentAccount.getAccountBalance(), currentAccount);
+                CurrentTransaction currentTransaction = new CurrentTransaction(date, transfrom.getUsername() + " transfer to " + transferTo.getUsername(), "Transfer", 
+                "Finished", transferAmount.doubleValue(), currentAccount.getAccountBalance(), currentAccount);
                 currentTransactionRepository.save(currentTransaction);
     
                 generateCurrentReceipt(currentTransaction);
@@ -126,7 +127,8 @@ public class TransactionServiceImpl implements TransactionService {
                 savingsAccountRepository.save(recipientSavingsAccount);
     
                 Date date = new Date();
-                SavingsTransaction savingsTransaction = new SavingsTransaction(date, transfrom.getUsername() + " transfer to " + transferTo.getUsername(), "Transfer", "Finished", transferAmount.doubleValue(), savingsAccount.getAccountBalance(), savingsAccount);
+                SavingsTransaction savingsTransaction = new SavingsTransaction(date, transfrom.getUsername() + " transfer to " + transferTo.getUsername(), "Transfer", 
+                "Finished", transferAmount.doubleValue(), savingsAccount.getAccountBalance(), savingsAccount);
                 savingsTransactionRepository.save(savingsTransaction);
     
                 generateSavingsReceipt(savingsTransaction);

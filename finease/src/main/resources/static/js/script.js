@@ -296,7 +296,7 @@ function initializeTTS() {
             screenReaderBtn.textContent = "Deactivate";
             speechBtn.style.display = "none";
             voiceList.style.display = "inline";
-            localStorage.setItem("screenReaderState", "active"); // Save state in local storage
+            localStorage.setItem("screenReaderState", "active");
             playaudio("/audio/pop.mp3");
             handlePageUpdate();
         } else {
@@ -306,7 +306,7 @@ function initializeTTS() {
             removeInputEventListener();
             screenReaderBtn.textContent = "Activate";
             voiceList.style.display = "none";
-            localStorage.removeItem("screenReaderState"); // Remove state from local storage
+            localStorage.removeItem("screenReaderState");
             localStorage.removeItem("IOBusy");
         }
     }
