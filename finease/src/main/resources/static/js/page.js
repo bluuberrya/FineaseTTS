@@ -18,7 +18,7 @@ if (document.getElementById("editProfileBtn")) {
 if (document.querySelector("[id^='viewPdfBtn1_']")) {
     document.querySelectorAll("[id^='viewPdfBtn1_']").forEach(function(button) {
         button.addEventListener("click", function(event) {
-            event.preventDefault(); // Prevent default form submission behavior
+            event.preventDefault();
             const pdfUrl = this.getAttribute('data-pdf-url');
             const pdfViewer = document.getElementById('pdf-viewer1');
             pdfViewer.setAttribute('src', pdfUrl);
@@ -30,7 +30,7 @@ if (document.querySelector("[id^='viewPdfBtn1_']")) {
 if (document.querySelector("[id^='viewPdfBtn2_']")) {
     document.querySelectorAll("[id^='viewPdfBtn2_']").forEach(function(button) {
         button.addEventListener("click", function(event) {
-            event.preventDefault(); // Prevent default form submission behavior
+            event.preventDefault();
             const pdfUrl = this.getAttribute('data-pdf-url');
             const pdfViewer = document.getElementById('pdf-viewer2');
             pdfViewer.setAttribute('src', pdfUrl);
@@ -45,10 +45,7 @@ function enableEditMode() {
         input.removeAttribute("readonly");
     });
 
-    // Change password input type to 'text'
     document.getElementById("password").setAttribute("type", "text");
-
-    // Change button text to 'Save'
     document.getElementById("editProfileBtn").innerText = "Save";
 }
 
@@ -58,10 +55,7 @@ function disableEditMode() {
         input.setAttribute("readonly", true);
     });
 
-    // Change password input type back to 'password'
     document.getElementById("password").setAttribute("type", "password");
-
-    // Change button text back to 'Edit'
     document.getElementById("editProfileBtn").innerText = "Edit";
 }
 

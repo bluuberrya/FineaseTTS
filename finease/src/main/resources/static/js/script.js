@@ -82,7 +82,6 @@ function initializeTTS() {
         pause();
     });
 
-    // State
     // Call toggleScreenReader when the screenReaderBtn is clicked
     screenReaderBtn.addEventListener("click", () => {
         if (!isScreenReaderActive && !isSpeaking) {
@@ -295,7 +294,7 @@ function initializeTTS() {
             addFocusListenersToElements();
             addInputEventListener();
             screenReaderBtn.textContent = "Deactivate";
-            speechBtn.style.display = "none"; // Hidespeech button
+            speechBtn.style.display = "none";
             voiceList.style.display = "inline";
             localStorage.setItem("screenReaderState", "active"); // Save state in local storage
             playaudio("/audio/pop.mp3");
@@ -345,12 +344,18 @@ function initializeTTS() {
             }, 800);
         };
     
-        if (error) {
+        if (error === "InvalidCredentials") {
             playAudioAndSpeak("/audio/error.mp3", "Input invalid, please try again");
+        } else if (error === "UserExist") {
+            playAudioAndSpeak("/audio/error.mp3", "Username or Email Address exist, please try again");
+        } else if (error === "InsufficientBal") {
+            playAudioAndSpeak("/audio/error.mp3", "Insufficient Balance, please try again");
         } else if (transaction === "Success") {
             playAudioAndSpeak("/audio/success.mp3", "Transaction successful");
         } else if (transaction === "Failed") {
-            playAudioAndSpeak("/audio/error.mp3", "Transaction failed, please try again.");
+            playAudioAndSpeak("/audio/error.mp3", "Transaction failed, please try again");
+        } else if (transaction === "SameAcc") {
+            playAudioAndSpeak("/audio/error.mp3", "Unable to transfer to same user, please try again");
         } else if (action === "Success") {
             playAudioAndSpeak("/audio/success.mp3", "Action successful");
         } else if (pdf === "True") {
@@ -599,7 +604,7 @@ function initializeTTS() {
                                                 text += item.str.replace(/-/g, "") + " "; // Replace "-" with an empty string
                                             });
                                             if (pageNum === pdf.numPages) {
-                                                textToSpeech(text); // Resolve the promise with the extracted text
+                                                textToSpeech(text);
                                             }
                                         });
                                     });

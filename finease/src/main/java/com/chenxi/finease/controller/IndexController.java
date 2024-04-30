@@ -115,7 +115,6 @@ public class IndexController {
 	}
 
 	// user
-
 	@GetMapping("/dashboard")
 	public String showDashboard(HttpSession session, Model model) {
 		// Retrieve the username from the session
@@ -522,7 +521,7 @@ public class IndexController {
 			System.out.println("Account Type: " + accountType);
 			System.out.println("Transfer Amount: " + transferAmount);
 		} else {
-			return "redirect:/mutransfer?transaction=Failed";
+			return "redirect:/mutransfer?transaction=SameAcc";
 		}
 		return "redirect:/mutransfer?transaction=Success";
 	}
